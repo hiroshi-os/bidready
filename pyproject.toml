@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bidready"
+version = "0.1.0"
+description = "Cited go/no-go, compliance matrix, risks and pre-bid queries for Indian government tender packs."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115.6",
+  "uvicorn>=0.34.0",
+  "sqlalchemy>=2.0.36",
+  "psycopg[binary]>=3.2.3",
+  "pydantic>=2.10.4",
+  "pymupdf>=1.25.1",
+  "pytesseract>=0.3.13",
+  "pillow>=11.0.0",
+  "rank-bm25>=0.2.2",
+  "faiss-cpu>=1.9.0",
+  "numpy>=2.1.0",
+  "langgraph>=0.2.60",
+  "httpx>=0.28.1",
+  "jinja2>=3.1.5",
+  "python-multipart>=0.0.20",
+]
+
+[project.optional-dependencies]
+local = [
+  "sentence-transformers>=3.3.1",
+]
+dev = [
+  "pytest>=8.3.4",
+  "ruff>=0.8.4",
+]
+
+[project.scripts]
+bidready = "bidready.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+bidready = [
+  "web/templates/*.html",
+  "web/static/*.css",
+  "synthetic/*.json",
+  "synthetic/*/*.txt",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests", "evals"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
