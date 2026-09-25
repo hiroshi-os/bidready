@@ -1,0 +1,109 @@
+:root {
+  color-scheme: light;
+  --ink: #1c1915;
+  --muted: #5c564c;
+  --paper: #f6f3ec;
+  --panel: #fffdf8;
+  --line: #ddd6c8;
+  --accent: #1f4d3a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.45;
+}
+
+.top {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1rem 1.5rem 0;
+}
+
+.mark {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.tag, .meta, .note, .kicker, .file, .why {
+  color: var(--muted);
+}
+
+.disclaimer {
+  margin: 0.75rem 1.5rem 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--line);
+  background: #fff8e8;
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 1rem 1.1rem;
+  margin-top: 1rem;
+}
+
+h1 { font-size: 1.55rem; margin: 0.2rem 0 0.6rem; }
+h2 { font-size: 1.15rem; margin: 0 0 0.6rem; }
+
+.lead { max-width: 68ch; }
+
+.stack { display: grid; gap: 0.8rem; max-width: 42rem; }
+label { display: grid; gap: 0.25rem; font-weight: 600; }
+input, select, button {
+  font: inherit;
+  padding: 0.45rem 0.5rem;
+}
+button {
+  width: fit-content;
+  background: var(--accent);
+  color: white;
+  border: 0;
+  cursor: pointer;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { border-top: 1px solid var(--line); vertical-align: top; text-align: left; padding: 0.55rem 0.4rem; }
+q { display: block; margin-top: 0.25rem; }
+
+.pill {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border: 1px solid var(--line);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+}
+.pill.GO, .pill.met { background: #e5f2ea; }
+.pill.CONDITIONAL, .pill.unclear, .pill.missing, .pill.medium { background: #fff3d6; }
+.pill.NO-GO, .pill.not_met, .pill.failed, .pill.high, .pill.error { background: #fde2dc; }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.letter {
+  white-space: pre-wrap;
+  font-family: "Iowan Old Style", Palatino, Georgia, serif;
+  background: #fbfaf6;
+  padding: 1rem;
+  border: 1px solid var(--line);
+}
+.cases { list-style: none; padding: 0; }
+.cases li { display: flex; gap: 0.7rem; align-items: center; padding: 0.35rem 0; border-top: 1px solid var(--line); }
+.error { color: #8d2a1f; }
+
+@media (max-width: 800px) {
+  .split { grid-template-columns: 1fr; }
+  table { display: block; overflow-x: auto; }
+}

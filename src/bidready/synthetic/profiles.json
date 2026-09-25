@@ -1,0 +1,20 @@
+{
+  "profiles": [
+    {
+      "id": "sample-civil",
+      "synthetic": true,
+      "folder": "sample-civil",
+      "legal_name": "Sample Civil Works (Bidready Eval) Private Limited",
+      "domains": ["civil", "construction"],
+      "summary": "Fictional civil MSME used only for evaluation. Not a real company and not a real certificate."
+    },
+    {
+      "id": "sample-security",
+      "synthetic": true,
+      "folder": "sample-security",
+      "legal_name": "Sample Security Agency (Bidready Eval)",
+      "domains": ["security"],
+      "summary": "Fictional security agency used only for evaluation. It has no PSARA licence. Not a real company."
+    }
+  ]
+}

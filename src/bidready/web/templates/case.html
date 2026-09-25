@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}{{ case.title }} — bidready{% endblock %}
+{% block body %}
+<section class="panel">
+  <p class="kicker">Case {{ case.id }}</p>
+  <h1>{{ case.title }}</h1>
+  <p>
+    <span class="pill {{ case.go_no_go or case.status }}">{{ case.go_no_go or case.status }}</span>
+    {% if case.provider %}<span class="meta">{{ case.provider }} / {{ case.model }}</span>{% endif %}
+    {% if case.latency_ms is not none %}<span class="meta">{{ case.latency_ms }} ms</span>{% endif %}
+    {% if case.profile_id %}<span class="meta">profile {{ case.profile_id }} (synthetic)</span>{% endif %}
+  </p>
+  {% if case.error %}<p class="error">{{ case.error }}</p>{% endif %}
+  {% if report %}
+  <p>{{ report.summary }}</p>
+  {% endif %}
+</section>
+
+{% if report %}
+<section class="panel">
+  <h2>Compliance matrix</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Requirement</th>
+        <th>Kind</th>
+        <th>Decision</th>
+        <th>Tender citation</th>
+        <th>Company evidence</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in report.matrix %}
+      <tr>
+        <td>{{ row.text }}</td>
+        <td>{{ row.kind }}</td>
+        <td><span class="pill {{ row.decision }}">{{ row.decision }}</span></td>
+        <td>
+          {% if row.tender_clause %}cl. {{ row.tender_clause }}, {% endif %}p. {{ row.tender_page }}
+          <span class="file">{{ row.tender_filename }}</span>
+          <q>{{ row.tender_quote }}</q>
+        </td>
+        <td>
+          {% if row.evidence_quote %}
+          {% if row.evidence_clause %}cl. {{ row.evidence_clause }}, {% endif %}p. {{ row.evidence_page }}
+          <span class="file">{{ row.evidence_filename }}</span>
+          <q>{{ row.evidence_quote }}</q>
+          {% else %}
+          <span class="missing">no supporting span</span>
+          {% endif %}
+          <p class="why">{{ row.rationale }}</p>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="panel split">
+  <div>
+    <h2>Deadlines</h2>
+    {% if report.deadlines %}
+    <ul>
+      {% for item in report.deadlines %}
+      <li><strong>{{ item.event }}</strong> — {% if item.clause %}cl. {{ item.clause }}, {% endif %}p. {{ item.page }} {{ item.filename }}<br><q>{{ item.quote }}</q></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p>None extracted.</p>{% endif %}
+  </div>
+  <div>
+    <h2>Risks</h2>
+    {% if report.risks %}
+    <ul>
+      {% for item in report.risks %}
+      <li><span class="pill {{ item.severity }}">{{ item.severity }}</span> {% if item.clause %}cl. {{ item.clause }}, {% endif %}p. {{ item.page }}<br><q>{{ item.quote }}</q></li>
+      {% endfor %}
+    </ul>
+    {% else %}<p>None extracted.</p>{% endif %}
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Draft pre-bid query letter</h2>
+  <pre class="letter">{{ report.letter }}</pre>
+</section>
+
+<section class="panel">
+  <h2>Agent trace</h2>
+  <p class="note">Verifier passed: {{ report.verification.passed }}. Exhausted retries: {{ report.verification.exhausted }}.</p>
+  <ol class="trace">
+    {% for event in report.trace %}
+    <li><strong>{{ event.node }}</strong> <span class="meta">{{ event.ms }} ms</span> — {{ event.detail }}</li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section class="panel">
+  <h2>Notifications</h2>
+  <ul>
+    {% for note in notifications %}
+    <li>{{ note.channel }}: {{ note.status }}</li>
+    {% endfor %}
+  </ul>
+  <p><a href="/api/cases/{{ case.id }}">JSON</a></p>
+</section>
+{% endif %}
+{% endblock %}

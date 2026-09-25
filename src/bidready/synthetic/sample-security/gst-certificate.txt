@@ -1,0 +1,5 @@
+SYNTHETIC — fictional GST registration created for the bidready evaluation. Not a real certificate.
+Goods and Services Tax registration certificate.
+Legal name: Sample Security Agency (Bidready Eval).
+GSTIN: 27SYNTH0000B1Z8. Status: Active.
+This GST registration is synthetic.

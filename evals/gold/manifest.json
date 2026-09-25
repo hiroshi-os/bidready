@@ -1,0 +1,257 @@
+{
+  "labelled_on": "2026-09-25",
+  "label_note": "Requirements, retrieval anchors and eligibility decisions were read from the fetched PDFs. Company profiles named here are synthetic and are not real bidders.",
+  "pdf_dir": "data/gold_pdfs",
+  "tenders": [
+    {
+      "id": "barc-ced-2026",
+      "title": "BARC Civil Engineering Division e-tender BARC/CED/ET/42/2026-2027",
+      "portal": "BARC",
+      "source_url": "https://barc.gov.in/tenders/tender265.pdf",
+      "filename": "barc-ced-2026.pdf",
+      "sha256": "6d175361a29cfe7c9ac23205e295f9d967a6d12361998ad0597e9cb0825fcb6c",
+      "license_note": "Public notice on barc.gov.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "turnover", "kind": "financial", "match_all": ["Average Annual Financial Turnover", "125.29 Lakhs"]},
+        {"id": "solvency", "kind": "financial", "match_all": ["Bank Solvency Certificate", "50.12 Lakhs"]},
+        {"id": "similar", "kind": "technical", "match_all": ["similar works each of value not less than", "50.12 Lakhs"]},
+        {"id": "gst", "kind": "document", "match_all": ["Certificate of Registration for GST"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-turnover", "query": "minimum average annual financial turnover the bidder must have", "match_all": ["125.29 Lakhs"]},
+        {"id": "q-solvency", "query": "bank solvency certificate minimum amount", "match_all": ["50.12 Lakhs", "Solvency"]},
+        {"id": "q-gst", "query": "GST registration certificate required from the bidder", "match_all": ["Certificate of Registration for GST"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "turnover", "profile": "sample-civil", "expected": "not_met"},
+        {"requirement_id": "turnover", "profile": "sample-security", "expected": "not_met"},
+        {"requirement_id": "solvency", "profile": "sample-civil", "expected": "not_met"},
+        {"requirement_id": "solvency", "profile": "sample-security", "expected": "missing"},
+        {"requirement_id": "gst", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "gst", "profile": "sample-security", "expected": "met"}
+      ]
+    },
+    {
+      "id": "cci-forensic-2024",
+      "title": "Competition Commission of India empanelment of digital forensic service providers, NIT dated 24.10.2024",
+      "portal": "CCI",
+      "source_url": "https://www.cci.gov.in/images/whatsnew/en/nit-dated-24102024-11729760843.pdf",
+      "filename": "cci-forensic-2024.pdf",
+      "sha256": "f38f75d349fe84e592fb13fc230574e252284bb47abdb7f294160c45bd51f442",
+      "license_note": "Public NIT on cci.gov.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "turnover", "kind": "financial", "match_all": ["minimum average annual turnover", "One crore"]},
+        {"id": "emd", "kind": "financial", "match_all": ["Earnest Money Deposit (EMD) of Rs. 50,000"]},
+        {"id": "gst", "kind": "document", "match_all": ["PAN, TAN, GST"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-turnover", "query": "minimum average annual turnover or revenue for the bidder", "match_all": ["One crore"]},
+        {"id": "q-emd", "query": "earnest money deposit amount to be submitted with the bid", "match_all": ["50,000"]},
+        {"id": "q-gst", "query": "PAN and GST registration the bidder must hold", "match_all": ["PAN, TAN, GST"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "turnover", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "turnover", "profile": "sample-security", "expected": "not_met"},
+        {"requirement_id": "emd", "profile": "sample-civil", "expected": "missing"},
+        {"requirement_id": "gst", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "gst", "profile": "sample-security", "expected": "met"}
+      ]
+    },
+    {
+      "id": "epi-1366",
+      "title": "EPI e-tender EPI/ER/CON/941/1366, PEB industrial shed at Anara",
+      "portal": "EPI",
+      "source_url": "https://epi.gov.in/admin/image/tenders/1741783038_NIT-1366.pdf",
+      "filename": "epi-1366.pdf",
+      "sha256": "9fc41d1f16a2e7ca8f0a83925f9d8664cdf89688589a9dd13911a4c54b4bd9ab",
+      "license_note": "Public NIT on epi.gov.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "emd", "kind": "financial", "match_all": ["Earnest Money Deposit (EMD) of Rs. 12,17,975"]},
+        {"id": "turnover", "kind": "financial", "match_all": ["average annual financial turnover", "50%"]},
+        {"id": "similar", "kind": "technical", "match_all": ["successfully completed similar work", "Seven"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-emd", "query": "earnest money deposit that must accompany the bid", "match_all": ["12,17,975"]},
+        {"id": "q-turnover", "query": "average annual financial turnover as a percentage of estimated cost", "match_all": ["average annual financial turnover", "50%"]},
+        {"id": "q-prebid", "query": "date and time of the pre-bid meeting", "match_all": ["Pre-Bid Meeting"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "emd", "profile": "sample-civil", "expected": "missing"},
+        {"requirement_id": "turnover", "profile": "sample-civil", "expected": "unclear"}
+      ]
+    },
+    {
+      "id": "epi-1367",
+      "title": "EPI e-tender EPI/ER/CON/941/1367, mechanical works at Anara",
+      "portal": "EPI",
+      "source_url": "https://epi.gov.in/admin/image/tenders/1741689388_NIT1367.pdf",
+      "filename": "epi-1367.pdf",
+      "sha256": "f55ce8676768bf7fb1a2f4f97afbc69c2b9399a1dc4bd2e5ac0bb6c4ac5a1044",
+      "license_note": "Public NIT on epi.gov.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "emd", "kind": "financial", "match_all": ["Earnest Money Deposit (EMD) of Rs. 5,05,000"]},
+        {"id": "turnover", "kind": "financial", "match_all": ["average annual financial turnover", "50%"]},
+        {"id": "similar", "kind": "technical", "match_all": ["successfully completed similar work"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-emd", "query": "how much earnest money must be submitted", "match_all": ["5,05,000"]},
+        {"id": "q-turnover", "query": "audited average annual financial turnover requirement", "match_all": ["average annual financial turnover"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "emd", "profile": "sample-civil", "expected": "missing"}
+      ]
+    },
+    {
+      "id": "igidr-travel-2024",
+      "title": "IGIDR tender IGIDR/Tender/2024/ED/09 for a ticket booking agency",
+      "portal": "IGIDR",
+      "source_url": "http://www.igidr.ac.in/tender/2024/TD-09.pdf",
+      "filename": "igidr-travel-2024.pdf",
+      "sha256": "4c9b3377ef0804ae3b4d7534d8e9e664b8ded7967b3e3e0350c57fe41254fef2",
+      "license_note": "Public tender on igidr.ac.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "emd", "kind": "financial", "match_all": ["Earnest Money Deposit of Rs. 20,000"]},
+        {"id": "turnover", "kind": "financial", "match_all": ["average annual turnover of Rs. 30 Lakh"]},
+        {"id": "gst", "kind": "document", "match_all": ["valid PAN and Goods and Service Tax registration"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-turnover", "query": "average annual turnover required for the last three financial years", "match_all": ["30 Lakh"]},
+        {"id": "q-emd", "query": "earnest money the bidder has to submit along with the bid", "match_all": ["20,000"]},
+        {"id": "q-gst", "query": "PAN and GST registration copies to be submitted", "match_all": ["Goods and Service Tax registration"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "turnover", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "turnover", "profile": "sample-security", "expected": "met"},
+        {"requirement_id": "emd", "profile": "sample-civil", "expected": "missing"},
+        {"requirement_id": "gst", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "gst", "profile": "sample-security", "expected": "met"}
+      ]
+    },
+    {
+      "id": "iiml-website",
+      "title": "IIM Lucknow annual maintenance contract for the institute website",
+      "portal": "IIM Lucknow",
+      "source_url": "https://www.iiml.ac.in/sites/default/files/upload/tender/1620136915IIML_Website.pdf",
+      "filename": "iiml-website.pdf",
+      "sha256": "d0883647d8bb7ad5425df73fde6f88fca8b43c338c071e71d0f2b3bda74ae9c8",
+      "license_note": "Public tender on iiml.ac.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "turnover", "kind": "financial", "match_all": ["Average Turnover of last three financial years should be more than 20 Lakhs"]},
+        {"id": "gst", "kind": "document", "match_all": ["GST Registration", "PAN"]},
+        {"id": "emd", "kind": "financial", "match_all": ["Earnest Money Deposit (EMD)"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-turnover", "query": "average turnover of the last three financial years", "match_all": ["more than 20 Lakhs"]},
+        {"id": "q-gst", "query": "GST registration and PAN to enclose with the bid", "match_all": ["GST Registration"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "turnover", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "turnover", "profile": "sample-security", "expected": "met"},
+        {"requirement_id": "gst", "profile": "sample-civil", "expected": "met"}
+      ]
+    },
+    {
+      "id": "iimtrichy-stp-2024",
+      "title": "IIM Tiruchirappalli NIT 24SP204T for STP plant materials and servicing, 14.10.2024",
+      "portal": "IIM Tiruchirappalli",
+      "source_url": "https://www.iimtrichy.ac.in/sites/default/files/upload/14Oct2024193737_2024101419373324SP204T_STPPlant_Final.pdf",
+      "filename": "iimtrichy-stp-2024.pdf",
+      "sha256": "cedd8555e877d49fab600c5a3475e1be0bc674241729ada196333d76aa62860f",
+      "license_note": "Public NIT on iimtrichy.ac.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "turnover", "kind": "financial", "match_all": ["Average Annual Turnover of the bidder should be at least 100%"]},
+        {"id": "emd", "kind": "financial", "match_all": ["Earnest Money Deposit (EMD) of Rs. 20,000"]},
+        {"id": "blacklist", "kind": "eligibility", "match_all": ["should not have been blacklisted"]},
+        {"id": "gst", "kind": "document", "match_all": ["GST registration certificate"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-turnover", "query": "average annual turnover compared with the estimated cost", "match_all": ["100% of the estimated cost"]},
+        {"id": "q-emd", "query": "earnest money deposit of twenty thousand rupees", "match_all": ["Rs. 20,000"]},
+        {"id": "q-blacklist", "query": "bidder must not have been blacklisted by a government department", "match_all": ["should not have been blacklisted"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "emd", "profile": "sample-civil", "expected": "missing"},
+        {"requirement_id": "blacklist", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "blacklist", "profile": "sample-security", "expected": "met"},
+        {"requirement_id": "gst", "profile": "sample-security", "expected": "met"},
+        {"requirement_id": "turnover", "profile": "sample-civil", "expected": "unclear"}
+      ]
+    },
+    {
+      "id": "iitpkd-ambulance-2024",
+      "title": "IIT Palakkad tender TENDER/2023-24/399 for an ambulance",
+      "portal": "IIT Palakkad",
+      "source_url": "https://iitpkd.ac.in/sites/default/files/2024-02/TENDER_DOCUMENT_399.pdf",
+      "filename": "iitpkd-ambulance-2024.pdf",
+      "sha256": "3e9727a9160393e221f1e0b53b004da2341302b3c42ae9657feed370a134b021",
+      "license_note": "Public tender on iitpkd.ac.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "turnover", "kind": "financial", "match_all": ["Average Annual Turnover of Rs 50,00,000"]},
+        {"id": "emd", "kind": "financial", "match_all": ["furnish EMD of Rs. 50,000"]},
+        {"id": "gst", "kind": "document", "match_all": ["PAN/GST"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-turnover", "query": "average annual turnover during the last three financial years", "match_all": ["50,00,000"]},
+        {"id": "q-emd", "query": "earnest money deposit of fifty thousand rupees", "match_all": ["EMD of Rs. 50,000"]},
+        {"id": "q-gst", "query": "registration PAN and GST documents to furnish", "match_all": ["PAN/GST"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "turnover", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "turnover", "profile": "sample-security", "expected": "not_met"},
+        {"requirement_id": "emd", "profile": "sample-civil", "expected": "missing"},
+        {"requirement_id": "gst", "profile": "sample-civil", "expected": "met"}
+      ]
+    },
+    {
+      "id": "sggscc-civil-2024",
+      "title": "Sri Guru Gobind Singh College of Commerce e-tender for civil and interior works, 2024",
+      "portal": "SGGSCC",
+      "source_url": "https://www.sggscc.ac.in/uploads/tenders/tenderDocument/02da0157d53780863da33b98f4c446f0.pdf",
+      "filename": "sggscc-civil-2024.pdf",
+      "sha256": "a3bbd2b90d42f52a0835fa6287240c2cd0b4f84edc93bc975346fccb60dfa549",
+      "license_note": "Public tender on sggscc.ac.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "turnover", "kind": "financial", "match_all": ["AVERAGE ANNUAL TURNOVER", "88 LAKHS"]},
+        {"id": "solvency", "kind": "financial", "match_all": ["SOLVENCY OF RUPEES 70 LAKHS"]},
+        {"id": "emd", "kind": "financial", "match_all": ["EMD OF RUPEES 3,52,160"]},
+        {"id": "similar", "kind": "technical", "match_all": ["THREE SIMILAR WORKS", "70 LAKHS"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-turnover", "query": "average annual gross turnover the bidder should have", "match_all": ["88 LAKHS"]},
+        {"id": "q-solvency", "query": "solvency certificate amount in rupees", "match_all": ["SOLVENCY OF RUPEES 70 LAKHS"]},
+        {"id": "q-emd", "query": "earnest money deposit the bidder should submit", "match_all": ["3,52,160"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "turnover", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "turnover", "profile": "sample-security", "expected": "not_met"},
+        {"requirement_id": "solvency", "profile": "sample-civil", "expected": "not_met"},
+        {"requirement_id": "solvency", "profile": "sample-security", "expected": "missing"},
+        {"requirement_id": "emd", "profile": "sample-civil", "expected": "missing"}
+      ]
+    },
+    {
+      "id": "nhm-dnh-2025",
+      "title": "National Health Mission Dadra and Nagar Haveli and Daman and Diu tender notice (s3waas upload, November 2025)",
+      "portal": "NHM DNH and DD",
+      "source_url": "https://cdnbbsr.s3waas.gov.in/s371e09b16e21f7b6919bbfc43f6a5b2f0/uploads/2025/11/202511132120554845.pdf",
+      "filename": "nhm-dnh-2025.pdf",
+      "sha256": "ad61faa15401a42041250da3b4140599ff5184330e3d6439929f06c533189b40",
+      "license_note": "Public tender upload on cdnbbsr.s3waas.gov.in. The PDF is not committed; fetch it with the eval CLI.",
+      "requirements": [
+        {"id": "emd", "kind": "financial", "match_all": ["Earnest Money Deposit (EMD)", "4,610"]},
+        {"id": "turnover", "kind": "financial", "match_all": ["average annual turnover of the bidder", "50% of the Tender Value"]},
+        {"id": "gst", "kind": "document", "match_all": ["GST Registration Certificate", "Goods and Services Tax"]}
+      ],
+      "retrieval_queries": [
+        {"id": "q-emd", "query": "earnest money deposit amount in rupees", "match_all": ["4,610"]},
+        {"id": "q-turnover", "query": "average annual turnover as a share of tender value", "match_all": ["50% of the Tender Value"]},
+        {"id": "q-gst", "query": "valid GST registration certificate to submit", "match_all": ["GST Registration Certificate"]}
+      ],
+      "eligibility": [
+        {"requirement_id": "emd", "profile": "sample-civil", "expected": "missing"},
+        {"requirement_id": "gst", "profile": "sample-civil", "expected": "met"},
+        {"requirement_id": "turnover", "profile": "sample-security", "expected": "unclear"}
+      ]
+    }
+  ]
+}

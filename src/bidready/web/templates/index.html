@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}bidready{% endblock %}
+{% block body %}
+<section class="panel">
+  <h1>Read a tender pack against a company's own documents.</h1>
+  <p class="lead">Upload the notice, corrigenda and annexures, plus GST, turnover, work orders and certificates. bidready returns a cited eligibility report, a compliance matrix, risks and deadlines, and a draft pre-bid query letter.</p>
+  <form action="/cases" method="post" enctype="multipart/form-data" class="stack">
+    <label>Tender pack (PDF or text, one or more)
+      <input type="file" name="tender_files" accept=".pdf,.txt" multiple required>
+    </label>
+    <label>Company documents (optional if you pick a synthetic profile)
+      <input type="file" name="company_files" accept=".pdf,.txt" multiple>
+    </label>
+    <label>Synthetic company profile
+      <select name="profile_id">
+        <option value="">None — use only the files above</option>
+        {% for profile in profiles %}
+        <option value="{{ profile.id }}">{{ profile.legal_name }} (synthetic)</option>
+        {% endfor %}
+      </select>
+    </label>
+    <p class="note">The two built-in profiles are fictional and labelled synthetic. Do not upload a real company's private documents into a shared demo.</p>
+    <label>Title (optional)
+      <input type="text" name="title" maxlength="200">
+    </label>
+    <button type="submit">Analyse</button>
+    <p class="note">Provider: {{ settings.llm_provider }}. Embeddings: {{ settings.embedding_provider }}. Reranker: {{ settings.reranker }}. The request runs the graph before this page returns.</p>
+  </form>
+</section>
+<section class="panel">
+  <h2>Recent cases</h2>
+  {% if cases %}
+  <ul class="cases">
+    {% for case in cases %}
+    <li>
+      <a href="/cases/{{ case.id }}">{{ case.title }}</a>
+      <span class="pill {{ case.go_no_go or case.status }}">{{ case.go_no_go or case.status }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No cases yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: bidready
+      POSTGRES_PASSWORD: bidready
+      POSTGRES_DB: bidready
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bidready -d bidready"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://bidready:bidready@db:5432/bidready
+      DATA_DIR: /app/data
+      LLM_PROVIDER: mock
+      EMBEDDING_PROVIDER: hash
+      RERANKER: lexical
+      WEBHOOK_URL: ""
+      TENDERLENS_BASE_URL: ""
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+
+volumes:
+  pgdata:

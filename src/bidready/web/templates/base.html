@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}bidready{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="mark" href="/">bidready</a>
+    <span class="tag">tender eligibility, with citations</span>
+  </header>
+  <p class="disclaimer">Not legal advice. A go/no-go here is a reading of the clauses the pipeline extracted and the documents you uploaded. It is not a determination by the tendering authority. OCR on scanned pages can drop or garble text.</p>
+  <main>
+    {% block body %}{% endblock %}
+  </main>
+</body>
+</html>
