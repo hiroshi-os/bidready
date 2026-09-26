@@ -108,7 +108,7 @@ Four modes share one index:
 | `hybrid` | Reciprocal rank fusion of the two lists, `k = 60`. |
 | `hybrid_rerank` | Fusion pool of up to 30 chunks, then a reranker cuts it to k. |
 
-The default embedder is `hash`: a 384-dimensional feature hash of tokens. It is lexical. It is not a semantic model. It is the default so Docker and CI do not download weights. `EMBEDDING_PROVIDER=sentence-transformers` uses `all-MiniLM-L6-v2` after `pip install -e ".[local]"`. That provider was not installed for the measured run.
+The default embedder is `hash`: a 384-dimensional feature hash of tokens. It is lexical. It is not a semantic model. It is the default so Docker and CI do not download weights. `EMBEDDING_PROVIDER=sentence-transformers` uses `all-MiniLM-L6-v2` after `uv sync --extra local`. The local-model tables below use that embedder.
 
 The default reranker is character-trigram Jaccard. `RERANKER=cross-encoder` loads `cross-encoder/ms-marco-MiniLM-L-6-v2` from the same local extra. That model is the one in the local-model retrieval table below.
 
@@ -127,6 +127,8 @@ The checker does not read a hidden profile JSON at decision time. It retrieves c
 | EMD, bid security | A submission item. `missing` unless a company sentence cites an instrument. `missing` here is `CONDITIONAL`, not `NO-GO`. |
 
 Go / no-go, which is not a legal opinion: any `not_met` is `NO-GO`. A `missing` qualification is `NO-GO`. A `missing` submission item or any `unclear` row is `CONDITIONAL`. All `met` is `GO`.
+
+On the local-model path the extractor does not see every chunk. It reads up to 24 chunks: a hybrid-rerank pass, then a few chunks from sections whose headings look like eligibility, in batches of 2. The model picks a span id from a menu. The stored quote is that span. `text` is the model's restatement. Eligibility retrieves company chunks per requirement, again hybrid plus the cross-encoder, and the model picks an evidence span id. A missing or invalid span id clears the citation and keeps the decision. A second eval pass shows the rule checker's proposal and is stored separately. Parsed rupee amounts are appended as integers. The model-only pass does not see the rule decision.
 
 The verifier is programmatic. A quote is supported when it has at least 20 characters after whitespace normalisation and is a substring of the cited chunk (exact or whitespace-normalised). Periods in `Rs.` and `Mr.` are not sentence breaks, because splitting there used to drop the amount. The verifier does not ask a model whether a citation "seems" right.
 
@@ -165,24 +167,20 @@ The label file has 70 requirements. Three packs are exhaustive for bidder obliga
 
 ## Results
 
-The local-model numbers lead. The mock table further down is the pipeline and plumbing baseline from 2026-09-25, on the original 33-clause label set.
+Two local-model runs, same machine, same gold set. The after run is the one to read. The mock table further down is the pipeline and plumbing baseline from 2026-09-25, on the original 33-clause label set.
 
-### Local model, 2026-09-26
+Hardware for both runs: Python 3.12.3, Linux 6.12.94+ x86_64, Intel Xeon, 4 CPUs, 15.64 GiB RAM, no swap. Tesseract 5.3.4. Ollama 0.34.4. LLM `qwen2.5:3b` (Q4_K_M), temperature 0, `num_ctx` 4096. Embeddings `sentence-transformers/all-MiniLM-L6-v2`. Reranker `cross-encoder/ms-marco-MiniLM-L-6-v2`. NLI `cross-encoder/nli-MiniLM2-L6-H768`. Rule fallback off. No paid key. Cost was not computed.
 
-Scored run written 2026-09-26. It started 2026-09-25 22:13 UTC. Python 3.12.3, Linux 6.12.94+ x86_64, Intel Xeon, 4 CPUs, 15.64 GiB RAM, no swap. Tesseract 5.3.4. Ollama 0.34.4.
+| run | date | `num_predict` | what the model saw | file |
+| --- | --- | ---: | --- | --- |
+| before | started 2026-09-25 22:13 UTC, written 2026-09-26 | 900 | at most 12 chunks, batches of 3; a decision whose evidence quote was not a span was stored as `unclear` | `evals/results/local-3b-2026-09-26-window12.json` |
+| after | 2026-09-26 | 700 | up to 24 chunks by section, batches of 2; the model returns a span id; an invalid id clears the citation and keeps the decision | `evals/results/local.json` (copy: `evals/results/local-3b-2026-09-26-span.json`) |
 
-| piece | model |
-| --- | --- |
-| LLM | `qwen2.5:3b` (Q4_K_M), temperature 0, `num_predict` 900, `num_ctx` 4096 |
-| embeddings | `sentence-transformers/all-MiniLM-L6-v2` |
-| reranker | `cross-encoder/ms-marco-MiniLM-L-6-v2` |
-| NLI | `cross-encoder/nli-MiniLM2-L6-H768` |
+Unrounded values are in those files. Tables below round to three decimals.
 
-Rule fallback was off (`HEURISTIC_FALLBACK` false). The model reads at most 12 chunks per tender: hybrid retrieval with the cross-encoder, then obligation lines if the window is still short, in batches of 3. Risks and deadlines come from at most 8 retrieved chunks, and the prompt asks for at most 4 of each. Unrounded values are in `evals/results/local.json`.
+### Retrieval (28 queries)
 
-`qwen2.5:7b-instruct` was not used for this suite. On its own, on 2026-09-26, a 23-token reply took 3.6 seconds of generation (6.39 tokens/second) and left 5.61 GiB available. During the 3B suite, available memory fell to about 2.3 GiB with MiniLM and the cross-encoder resident, so the 7B model was not run across the 10 tenders.
-
-#### Retrieval (28 queries, same labels as the mock run)
+Remeasured in the after run. The unrounded recall@5, recall@10 and MRR match the before run.
 
 | mode | recall@5 | recall@10 | MRR |
 | --- | ---: | ---: | ---: |
@@ -190,91 +188,120 @@ Rule fallback was off (`HEURISTIC_FALLBACK` false). The model reads at most 12 c
 | hybrid (MiniLM + BM25) | 0.842 | 0.919 | 0.810 |
 | hybrid + ms-marco MiniLM cross-encoder | 0.877 | 0.937 | 0.946 |
 
-The cross-encoder is the best of the three on all three metrics. On the hash-embedding plumbing run, the lexical reranker had lowered MRR.
+### Requirement extraction
 
-#### Requirement extraction (`qwen2.5:3b`)
+A prediction matches when it contains every gold phrase. v1 after predicts 196 sentences against 70 labels, so precision on the seven sample packs counts unlabelled true requirements as false positives. The exhaustive column is the fairer precision.
 
-A prediction matches when it contains every gold phrase. The model only sees 12 chunks, and a quote that is not a span of a chunk is dropped.
+| run | prompt | scope | predicted | matched | precision | recall | F1 |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
+| before | v1 | all 70 | 63 | 24 / 70 | 0.381 | 0.343 | 0.361 |
+| after | v1 | all 70 | 196 | 32 / 70 | 0.163 | 0.457 | 0.241 |
+| before | v1 | exhaustive 46 | 26 | 15 / 46 | 0.577 | 0.326 | 0.417 |
+| after | v1 | exhaustive 46 | 53 | 22 / 46 | 0.415 | 0.478 | 0.444 |
+| before | v2 | all 70 | 47 | 14 / 70 | 0.298 | 0.200 | 0.239 |
+| after | v2 | all 70 | 20 | 10 / 70 | 0.500 | 0.143 | 0.222 |
+| before | v2 | exhaustive 46 | 13 | 6 / 46 | 0.462 | 0.130 | 0.203 |
+| after | v2 | exhaustive 46 | 8 | 5 / 46 | 0.625 | 0.109 | 0.185 |
 
-| prompt | scope | predicted | matched | precision | recall | F1 |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| v1 | all 70 | 63 | 24 / 70 | 0.381 | 0.343 | 0.361 |
-| v1 | 3 exhaustive packs (46) | 26 | 15 / 46 | 0.577 | 0.326 | 0.417 |
-| v2 | all 70 | 47 | 14 / 70 | 0.298 | 0.200 | 0.239 |
-| v2 | 3 exhaustive packs (46) | 13 | 6 / 46 | 0.462 | 0.130 | 0.203 |
+v1 recall rose and precision fell. v2 recall fell. On this model the wider window plus the span menu extracted more under v1, including many sentences that are not in the 70 labels.
 
-v1 is the stronger of the two prompts on this model. Recall stays near a third on the exhaustive packs: most labelled obligations were outside the 12-chunk window or the quote was not a verbatim span.
+### Eligibility
 
-#### Eligibility (`qwen2.5:3b`, no rule fallback)
+The before number is one model pass. The after run reports two passes. `llm` does not see the rule checker. `hybrid` is shown the rule checker's decision and may agree or override. The rule checker on the same 39 labels is 39/39 in both files.
 
-5 / 39. Accuracy 0.128. Every row was judged by the model (`source` `llm`).
+| run | judge | correct | accuracy | cited | met | not_met | missing | unclear |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| before | llm, quote had to be a span | 5 / 39 | 0.128 |  | 0 / 19 | 0 / 7 | 3 / 10 | 2 / 3 |
+| after | llm | 12 / 39 | 0.308 | 32 / 39 | 5 / 19 | 7 / 7 | 0 / 10 | 0 / 3 |
+| after | hybrid | 16 / 39 | 0.410 | 39 / 39 | 9 / 19 | 7 / 7 | 0 / 10 | 0 / 3 |
 
-| expected \ predicted | met | not_met | missing | unclear |
-| --- | ---: | ---: | ---: | ---: |
-| met (19) | 0 | 0 | 2 | 17 |
-| not_met (7) | 0 | 0 | 0 | 7 |
-| missing (10) | 0 | 2 | 3 | 5 |
-| unclear (3) | 0 | 0 | 1 | 2 |
+Before, 17 of 19 `met` rows and all 7 `not_met` rows were stored as `unclear`. Two of the five matches were those dropped `unclear` rows. After, every `not_met` row is correct on both passes, and `met` is 5/19 (llm) or 9/19 (hybrid). Every `missing` row was predicted `not_met`. The model picks a span and treats it as a failure instead of saying the span is not about the requirement.
 
-The five matches are three `missing` decisions (BARC solvency for `sample-security`, CCI EMD for `sample-civil`, IGIDR EMD for `sample-civil`) and two `unclear` decisions (EPI-1366 turnover for `sample-civil`, NHM turnover for `sample-security`). Those two `unclear` rows are the path that discards a `met` or `not_met` when the evidence quote is not a span. No labelled `met` or `not_met` was predicted correctly. The rule checker on the same 39 labels is still 39/39; that number is the rules, recorded in `local.json` as `heuristic_eligibility`.
+After, llm confusion: `met` to `met` 5, `met` to `not_met` 7, `met` to `missing` 7, `not_met` to `not_met` 7, `missing` to `not_met` 10, `unclear` to `not_met` 2, `unclear` to `met` 1. Hybrid: `met` to `met` 9, `met` to `not_met` 10, `not_met` to `not_met` 7, `missing` to `not_met` 10, `unclear` to `met` 2, `unclear` to `not_met` 1.
 
-#### Citation faithfulness
+A single smoke call before the suite, same model, showed the comparison error on one turnover row: the menu said company 12000000 INR and requirement 3000000 INR, and the model answered `not_met` because it called 12000000 smaller. With the rule pre-screen on that same row it answered `met`. That smoke is not one of the 39 scored rows.
 
-Span containment, after the pipeline drops quotes that are not spans: v1 143/143, v2 145/145. That rate is the filter.
+### Citation faithfulness
 
-Semantic support is the NLI label. Requirement rows store the quote as the requirement text, so those pairs are identical and the model calls them entailment (v1 63/63, v2 47/47). Excluding identical pairs:
+Span containment after the pipeline drops quotes that are not spans: before v1 143/143, v2 145/145; after v1 387/387, v2 60/60. That rate is the filter.
 
-| prompt | pairs | entailment | rate | evidence | risk | deadline |
-| --- | ---: | ---: | ---: | --- | --- | --- |
-| v1 | 33 | 7 | 0.212 | 3/17 | 0/10 | 4/6 |
-| v2 | 45 | 10 | 0.222 | 1/11 | 0/19 | 9/15 |
+The headline semantic number is NLI entailment on pairs whose two sides are not the same string.
 
-A hand check of 16 pairs, on 2026-09-26, agreed with the NLI support decision on 13 and disagreed on 3. The three disagreements are forfeiture, re-tender exclusion, and damages equal to EMD: a reader treats them as penalties, and the NLI model labelled them neutral. The risk hypothesis is the fixed sentence "This tender sentence states a contractual risk or penalty." The 0 entailment counts on risks follow that wording. The 16 pairs are in `evals/results/local.json` under `hand_check`.
+| run | prompt | non-identical pairs | entailment | rate |
+| --- | --- | ---: | ---: | ---: |
+| before | v1 | 33 | 7 | 0.212 |
+| after | v1 | 298 | 157 | 0.527 |
+| before | v2 | 45 | 10 | 0.222 |
+| after | v2 | 43 | 13 | 0.302 |
 
-#### Latency and tokens
+The mix changed. Before, requirement text was a copy of the quote, so those pairs were identical (v1 63/63, v2 47/47) and left out of the headline. The headline was then evidence, risk and deadline. After, requirement `text` is a restatement, so most headline pairs are requirements. After v1 by kind, including identical pairs in the counts: requirements 169/196 entailment (22 identical), evidence 3/103, risk 0/13, deadline 7/8. After v2: requirements 13/20 (2 identical), evidence 2/14, risk 0/11, no deadlines stored. Evidence rationales are usually not entailed by the cited span. Several cited spans are the synthetic banner line ("SYNTHETIC — fictional ... solvency certificate"), which the menu kept because the line contains the word solvency.
 
-Wall clock around `analyse()` with `sample-civil`. Tokens are Ollama counts. Cost was not computed.
+Hand check of the first 16 v1 pairs in the after file, on 2026-09-26. Agreement is on whether the span supports the hypothesis (entailment versus not). Agree 14, disagree 2. One disagreement is a loss-year sentence and the restatement "The bidder should not have incurred...", which the NLI model labelled neutral. The other is a span that says BARC reserves the right to forfeit security, restated as "The bidder must forfeit", which the NLI model labelled entailment. The 16 pairs and these two notes are `hand_check` in `evals/results/local.json`. The before hand check (13 agree, 3 disagree, all risk sentences) is in the window-12 file and is not this run.
 
-Prompt v1 total 3209.7 seconds, 97,783 prompt tokens, 25,682 completion tokens.
+### Latency and tokens
+
+Wall clock around `analyse()` with `sample-civil`. Tokens are Ollama counts.
+
+| run | prompt | wall clock | prompt tokens | completion tokens |
+| --- | --- | ---: | ---: | ---: |
+| before | v1 | 3209.7 s | 97783 | 25682 |
+| after | v1 | 4000.4 s | 213444 | 31521 |
+| before | v2 | 2502.4 s | 88665 | 20301 |
+| after | v2 | 1532.1 s | 106965 | 10316 |
+
+After, prompt v1:
 
 | tender | go / no-go | requirements | risks | deadlines | seconds | prompt / completion |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| barc-ced-2026 | NO-GO | 11 | 2 | 2 | 458.2 | 13391 / 3520 |
-| cci-forensic-2024 | NO-GO | 11 | 0 | 0 | 487.4 | 12562 / 3961 |
-| epi-1366 | NO-GO | 1 | 0 | 0 | 157.3 | 6240 / 1284 |
-| epi-1367 | CONDITIONAL | 0 | 3 | 0 | 110.3 | 5358 / 763 |
-| igidr-travel-2024 | NO-GO | 11 | 0 | 0 | 445.8 | 12524 / 3741 |
-| iiml-website | NO-GO | 11 | 2 | 2 | 470.9 | 13729 / 3856 |
-| iimtrichy-stp-2024 | CONDITIONAL | 7 | 2 | 0 | 312.8 | 10071 / 2343 |
-| iitpkd-ambulance-2024 | CONDITIONAL | 4 | 1 | 1 | 222.1 | 7459 / 1673 |
-| sggscc-civil-2024 | CONDITIONAL | 6 | 0 | 0 | 390.4 | 9760 / 3401 |
-| nhm-dnh-2025 | CONDITIONAL | 1 | 0 | 1 | 154.6 | 6689 / 1140 |
+| barc-ced-2026 | NO-GO | 17 | 1 | 2 | 356.3 | 19502 / 2837 |
+| cci-forensic-2024 | NO-GO | 16 | 1 | 1 | 338.3 | 19283 / 2757 |
+| epi-1366 | NO-GO | 22 | 0 | 0 | 414.6 | 22094 / 3458 |
+| epi-1367 | NO-GO | 14 | 4 | 0 | 320.9 | 17616 / 2583 |
+| igidr-travel-2024 | NO-GO | 13 | 0 | 2 | 304.2 | 18209 / 2269 |
+| iiml-website | NO-GO | 28 | 4 | 3 | 506.2 | 25917 / 4101 |
+| iimtrichy-stp-2024 | NO-GO | 19 | 0 | 0 | 380.6 | 21080 / 3047 |
+| iitpkd-ambulance-2024 | NO-GO | 12 | 1 | 0 | 301.3 | 17064 / 2308 |
+| sggscc-civil-2024 | NO-GO | 25 | 0 | 0 | 518.0 | 24878 / 3927 |
+| nhm-dnh-2025 | NO-GO | 30 | 2 | 0 | 560.1 | 27801 / 4234 |
 
-Prompt v2 total 2502.4 seconds, 88,665 prompt tokens, 20,301 completion tokens.
+After, prompt v2:
 
 | tender | go / no-go | requirements | risks | deadlines | seconds | prompt / completion |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| barc-ced-2026 | NO-GO | 6 | 1 | 2 | 282.4 | 10169 / 2253 |
-| cci-forensic-2024 | NO-GO | 5 | 1 | 0 | 242.9 | 8650 / 1993 |
-| epi-1366 | CONDITIONAL | 4 | 3 | 4 | 246.5 | 8417 / 1950 |
-| epi-1367 | NO-GO | 6 | 4 | 0 | 287.4 | 9872 / 2320 |
-| igidr-travel-2024 | CONDITIONAL | 5 | 0 | 2 | 243.2 | 8853 / 2012 |
-| iiml-website | CONDITIONAL | 5 | 4 | 3 | 260.0 | 10091 / 2011 |
-| iimtrichy-stp-2024 | NO-GO | 4 | 2 | 0 | 235.7 | 7957 / 1887 |
-| iitpkd-ambulance-2024 | CONDITIONAL | 3 | 3 | 0 | 202.7 | 6805 / 1794 |
-| sggscc-civil-2024 | CONDITIONAL | 3 | 1 | 3 | 208.8 | 7638 / 1667 |
-| nhm-dnh-2025 | CONDITIONAL | 6 | 0 | 1 | 292.8 | 10213 / 2414 |
+| barc-ced-2026 | NO-GO | 4 | 0 | 0 | 188.8 | 11846 / 1418 |
+| cci-forensic-2024 | NO-GO | 3 | 0 | 0 | 164.5 | 11154 / 1171 |
+| epi-1366 | CONDITIONAL | 0 | 0 | 0 | 116.7 | 8313 / 769 |
+| epi-1367 | CONDITIONAL | 0 | 2 | 0 | 113.1 | 8736 / 769 |
+| igidr-travel-2024 | NO-GO | 1 | 0 | 0 | 162.7 | 10522 / 958 |
+| iiml-website | NO-GO | 4 | 2 | 0 | 177.1 | 12054 / 1182 |
+| iimtrichy-stp-2024 | NO-GO | 1 | 0 | 0 | 137.5 | 10429 / 837 |
+| iitpkd-ambulance-2024 | NO-GO | 3 | 3 | 0 | 157.0 | 11602 / 1119 |
+| sggscc-civil-2024 | NO-GO | 2 | 4 | 0 | 157.0 | 11073 / 1049 |
+| nhm-dnh-2025 | GO | 2 | 0 | 0 | 157.6 | 11236 / 1044 |
 
-#### Prompt comparison on the real model
+### `qwen2.5:7b-instruct` on the three exhaustive packs
+
+Same day, same hardware, prompt v1 only, span-menu pipeline. Packs: IGIDR travel, IIML website, IIT Palakkad ambulance (46 labels, 12 eligibility rows). File: `evals/results/local-7b-exhaustive.json`. The other seven tenders were not run. `qwen2.5:3b` on those same three packs, from the after file, is the comparison.
+
+| model | predicted | matched | precision | recall | F1 | llm eligibility | hybrid eligibility | wall clock | prompt / completion tokens |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `qwen2.5:3b` | 53 | 22 / 46 | 0.415 | 0.478 | 0.444 | 4 / 12 | 6 / 12 | 1111.6 s | 61190 / 8678 |
+| `qwen2.5:7b-instruct` | 53 | 23 / 46 | 0.434 | 0.500 | 0.465 | 6 / 12 | 7 / 12 | 1848.6 s | 61429 / 6220 |
+
+7B seconds: IGIDR 611.7, IIML 744.2, IIT Palakkad 492.7. Span filter 111/111. NLI headline 53/86 (0.616). By kind, including identical pairs: requirements 44/53 entailment (0 identical), evidence 5/18 (2 identical), risk 0/10, deadline 6/7. On the 12 eligibility rows the 7B model-only pass got one `missing` correct; the 3B pass on the full 39 did not. The earlier smoke, 7B alone, was 23 generated tokens in 3.6 s (6.39 tokens/second) with 5.61 GiB still available.
+
+### Model table
+
+Eligibility below is the model-only pass, not the hybrid pass.
 
 | setup | measured | precision (all 70) | recall (all 70) | exhaustive precision | exhaustive recall | eligibility |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| `qwen2.5:3b`, prompt v1 | yes, 2026-09-26, hardware above | 0.381 | 0.343 | 0.577 | 0.326 | 5/39, scored once, prompt fixed by the eligibility system prompt |
-| `qwen2.5:3b`, prompt v2 | yes, same run | 0.298 | 0.200 | 0.462 | 0.130 | same 5/39 |
-| `qwen2.5:7b-instruct` | timed only, 23 tokens, 6.39 tok/s, 5.61 GiB free; suite not run |  |  |  |  |  |
+| before, `qwen2.5:3b`, prompt v1 | yes, 2026-09-26, hardware above | 0.381 | 0.343 | 0.577 | 0.326 | 5/39 |
+| after, `qwen2.5:3b`, prompt v1 | yes, same day, span menu | 0.163 | 0.457 | 0.415 | 0.478 | 12/39 llm, 16/39 hybrid |
+| before, `qwen2.5:3b`, prompt v2 | yes | 0.298 | 0.200 | 0.462 | 0.130 | same 5/39 |
+| after, `qwen2.5:3b`, prompt v2 | yes | 0.500 | 0.143 | 0.625 | 0.109 | same 12/39 and 16/39 |
+| `qwen2.5:7b-instruct`, prompt v1, three exhaustive packs | yes, 2026-09-26, same hardware | not run | not run | 0.434 | 0.500 | 6/12 llm, 7/12 hybrid |
 | OpenAI `gpt-4o-mini` | not run. `OPENAI_API_KEY` was unset |  |  |  |  |  |
-
-Eligibility was one pass, shared by the two extraction prompts. It uses `ELIGIBILITY_SYSTEM`, not extract v1/v2.
 
 ### Plumbing baseline (mock), 2026-09-25
 
@@ -323,13 +350,13 @@ Total wall clock 8.327 seconds. SGGSCC is the slow one because 8 pages went thro
 - This is not legal advice. A human still has to read the pack.
 - OCR quality is not labelled. Only the SGGSCC pack needed OCR here (8 of 50 pages). A bad scan will cite the OCR text, including its errors.
 - Company profiles are synthetic. There are no real bidders' documents in this repo.
-- The gold set is 10 tenders, 70 requirements (46 of them in three exhaustive packs), and 39 eligibility labels. The labels were used while the heuristic was written. The 12-chunk window, the cap of 4 risks and 4 deadlines, and the truncated-JSON repair were added while this local run was being debugged. The scores are one pass on that development set.
-- The local model sees 12 chunks. Extraction recall includes that limit.
-- Span faithfulness of 143/143 and 145/145 is the substring filter. Semantic support is the non-identical NLI table. On risks, that NLI model labelled forfeiture sentences neutral; a reader disagreed on 3 of 16 hand-checked pairs.
-- Two of the five eligibility matches are `unclear` after an evidence quote was dropped.
+- The gold set is 10 tenders, 70 requirements (46 of them in three exhaustive packs), and 39 eligibility labels. The labels were used while the heuristic and the span-menu prompts were written. The scores are one pass on that development set.
+- The local model sees at most 24 chunks, not the whole pack. Extraction recall includes that limit.
+- `qwen2.5:7b-instruct` was scored on the three exhaustive packs only (prompt v1). It was not run on the other seven tenders.
+- Span faithfulness of 387/387 and 60/60 is the substring filter. The headline semantic number is the non-identical NLI rate. On the after v1 file that rate is 157/298, and most of those pairs are requirement restatements. Evidence rationales are entailed in 3 of 103 pairs. A hand check of 16 pairs agreed on 14.
+- Eligibility still misses every `missing` label: the model predicts `not_met`. Banner lines that contain a fact word such as solvency stay on the evidence menu, and the model cites them.
 - No paid model was called. Token counts are recorded. Cost was not computed from them.
-- `qwen2.5:7b-instruct` was timed (23 tokens, 6.39 tokens/second, 5.61 GiB still available) and was not run on the 10 tenders.
-- Docker Compose was run on 2026-09-26. Docker 29.1.3 and Compose 2.40.3 were installed with apt. The first `docker compose up --build` failed while extracting the Postgres image: overlayfs refused a whiteout file (`operation not permitted` on `etc/alternatives/.wh.pager.1.gz`). A second attempt with `dockerd --storage-driver=vfs` built the app image and started both containers. Postgres 16.15 became healthy and the host could open `127.0.0.1:5432`. The app container exited with `psycopg.errors.ConnectionTimeout` to `db:5432`. A second container on the same bridge also timed out connecting to `db:5432`. dockerd logged `Deleting nftables IPv4 rules` with exit status 1. The app did not serve `/health`. The log excerpt is in `evals/results/docker-compose.txt`.
+- Docker Compose was run on 2026-09-26. Docker 29.1.3 and Compose 2.40.3 were installed with apt. The first `docker compose up --build` failed while extracting the Postgres image: overlayfs refused a whiteout file (`operation not permitted` on `etc/alternatives/.wh.pager.1.gz`). A second attempt with `dockerd --storage-driver=vfs` built the app image and started both containers. Postgres 16.15 became healthy and the host could open `127.0.0.1:5432`. The app container exited with `psycopg.errors.ConnectionTimeout` to `db:5432`. A second container on the same bridge also timed out connecting to `db:5432`, so the hostname resolved and the healthcheck had already passed. dockerd logged `Deleting nftables IPv4 rules` with exit status 1. The app did not serve `/health`. That is a VM bridge limitation, not a compose hostname or healthcheck setting. The log excerpt is in `evals/results/docker-compose.txt`.
 - GeM hosts (`fulfilment.gem.gov.in`, `bidplus.gem.gov.in`) did not return PDFs from this network (TLS error). They are not in the gold set.
 - Webhook, SMTP and S3 are implemented and unconfigured by default. S3 needs `boto3`, which is not a required dependency. tenderlens is optional.
 
@@ -373,7 +400,7 @@ python -m evals.cli local --llm-model qwen2.5:3b --prompts v1,v2 --out evals/res
 
 Keys are read from the environment only. See `.env.example`. Nothing in the repo is a credential.
 
-Local model mode is Ollama at `OLLAMA_BASE_URL` (default `http://127.0.0.1:11434`). The default model name is `qwen2.5:7b-instruct`. This VM scored `qwen2.5:3b` because that is the model that fit beside MiniLM and the cross-encoder. Install the local extra with `uv sync --extra local` before switching embeddings or the reranker off the hash / lexical defaults.
+Local model mode is Ollama at `OLLAMA_BASE_URL` (default `http://127.0.0.1:11434`). The default model name is `qwen2.5:7b-instruct`. This VM scored the full gold set with `qwen2.5:3b`, which left room for MiniLM and the cross-encoder. `qwen2.5:7b-instruct` was scored on the three exhaustive packs only. Install the local extra with `uv sync --extra local` before switching embeddings or the reranker off the hash / lexical defaults.
 
 ### Tests
 

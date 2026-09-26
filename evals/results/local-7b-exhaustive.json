@@ -1,0 +1,1559 @@
+{
+  "environment": {
+    "measured_on": "2026-09-26",
+    "python": "3.12.3",
+    "platform": "Linux-6.12.94+-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "cpu_count": 4,
+    "mem_total_gb": 15.64
+  },
+  "partial": false,
+  "llm_provider": "ollama",
+  "llm_model": "qwen2.5:7b-instruct",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "reranker_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+  "tender_ids": [
+    "igidr-travel-2024",
+    "iiml-website",
+    "iitpkd-ambulance-2024"
+  ],
+  "note": "llm_eligibility is the local model choosing a span id, with no rule proposal. hybrid_eligibility shows the rule checker's proposal and asks the model to agree or override. semantic_faithfulness.headline_rate excludes pairs whose two sides are the same string. heuristic_* is the cue extractor and the rule checker, not the earlier mock-baseline file.",
+  "retrieval": {
+    "vector": {
+      "queries": 28,
+      "recall@5": 0.775,
+      "recall@10": 0.8226190476190477,
+      "mrr": 0.6755952380952381
+    },
+    "hybrid": {
+      "queries": 28,
+      "recall@5": 0.8416666666666667,
+      "recall@10": 0.9190476190476191,
+      "mrr": 0.8095238095238095
+    },
+    "hybrid_rerank": {
+      "queries": 28,
+      "recall@5": 0.8773809523809524,
+      "recall@10": 0.9369047619047619,
+      "mrr": 0.9464285714285714
+    }
+  },
+  "tenders": [
+    {
+      "id": "igidr-travel-2024",
+      "pages": 15,
+      "ocr_pages": 0,
+      "chunks": 48,
+      "extracted_v1": 31,
+      "extracted_v2": 14
+    },
+    {
+      "id": "iiml-website",
+      "pages": 17,
+      "ocr_pages": 0,
+      "chunks": 70,
+      "extracted_v1": 55,
+      "extracted_v2": 22
+    },
+    {
+      "id": "iitpkd-ambulance-2024",
+      "pages": 13,
+      "ocr_pages": 0,
+      "chunks": 83,
+      "extracted_v1": 19,
+      "extracted_v2": 9
+    }
+  ],
+  "heuristic_extraction": {
+    "v1": {
+      "gold": 70,
+      "predicted": 549,
+      "matched": 48,
+      "precision": 0.08743169398907104,
+      "recall": 0.6857142857142857,
+      "f1": 0.15508885298869143
+    },
+    "v2": {
+      "gold": 70,
+      "predicted": 191,
+      "matched": 40,
+      "precision": 0.2094240837696335,
+      "recall": 0.5714285714285714,
+      "f1": 0.30651340996168586
+    }
+  },
+  "heuristic_eligibility": {
+    "n": 39,
+    "correct": 39,
+    "accuracy": 1.0,
+    "confusion": {
+      "not_met->not_met": 7,
+      "missing->missing": 10,
+      "met->met": 19,
+      "unclear->unclear": 3
+    }
+  },
+  "prompts": {
+    "v1": {
+      "profile": "sample-civil",
+      "profile_note": "Synthetic company. Not a real bidder.",
+      "extraction": {
+        "gold": 46,
+        "predicted": 53,
+        "matched": 23,
+        "precision": 0.4339622641509434,
+        "recall": 0.5,
+        "f1": 0.46464646464646464
+      },
+      "extraction_exhaustive": {
+        "gold": 46,
+        "predicted": 53,
+        "matched": 23,
+        "precision": 0.4339622641509434,
+        "recall": 0.5,
+        "f1": 0.46464646464646464
+      },
+      "runs": [
+        {
+          "tender_id": "igidr-travel-2024",
+          "case_id": "400e3abfc2d84ffa844107d1a85f71e9",
+          "status": "succeeded",
+          "go_no_go": "NO-GO",
+          "summary": "NO-GO. 1 supported, 7 contradicted, 2 missing and 6 unclear out of 16 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+          "requirements": 16,
+          "decisions": {
+            "met": 1,
+            "not_met": 7,
+            "missing": 2,
+            "unclear": 6
+          },
+          "risks": 3,
+          "deadlines": 2,
+          "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding IGIDR tender IGIDR/Tender/2024/ED/09 for a ticket booking agency\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 5, page 10 (igidr-travel-2024.pdf).\n   Tender text: \"The bidder should submit a copy of valid PAN and Goods and Service Tax registration (GST).\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n2. Clause 5, page 10 (igidr-travel-2024.pdf).\n   Tender text: \"The agency should have an average annual turnover of Rs. 30 Lakh for the last three consecutive financial years: FY 2020-21, FY 2021-22, and FY 2022-23.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n3. Clause 9, page 10 (igidr-travel-2024.pdf).\n   Tender text: \"Bidders must submit documentary proof in support of meeting each of the above minimum qualification criteria.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n4. Clause 9, page 10 (igidr-travel-2024.pdf).\n   Tender text: \"A simple undertaking by the bidder for any of the stated criteria will not suffice for the purpose.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n5. Clause 15, page 5 (igidr-travel-2024.pdf).\n   Tender text: \"The EMD paid by the successful bidder shall be held/encashed by the IGIDR as security for the execution and fulfillment of the contract.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n6. Clause 3, page 2 (igidr-travel-2024.pdf).\n   Tender text: \"The bidder has to submit an Earnest Money Deposit of Rs. 20,000/- (Rupees Twenty thousand only) along with the bid.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n7. Clause 5, page 4 (igidr-travel-2024.pdf).\n   Tender text: \"The bids should be received up to the end of the day on 8th June 2024.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\n8. Clause 7, page 4 (igidr-travel-2024.pdf).\n   Tender text: \"The Institute shall inform the qualified bidders of the price bid opening date.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]\nModel note on the queries: Please confirm whether an MSME or startup relaxation applies to the threshold mentioned in Clause 5, page 10 (igidr-travel-2024.pdf), and which document should demonstrate it.\n",
+          "verification": {
+            "passed": true,
+            "failures": [],
+            "stripped": [],
+            "exhausted": false
+          },
+          "trace": [
+            {
+              "node": "planner",
+              "ms": 0,
+              "detail": "15 queries, 15 sections"
+            },
+            {
+              "node": "extractor",
+              "ms": 182651,
+              "detail": "16 requirements via llm_sections:22_batches:10 (v1)"
+            },
+            {
+              "node": "eligibility",
+              "ms": 244597,
+              "detail": "16 rows via llm"
+            },
+            {
+              "node": "risk",
+              "ms": 163395,
+              "detail": "3 risks, 2 deadlines via llm"
+            },
+            {
+              "node": "drafter",
+              "ms": 18842,
+              "detail": "8 cited queries via template_plus_llm_note"
+            },
+            {
+              "node": "verifier",
+              "ms": 0,
+              "detail": "passed"
+            }
+          ],
+          "latency_seconds": 611.679,
+          "latency_ms_recorded": 611576,
+          "prompt_tokens": 19819,
+          "completion_tokens": 1916,
+          "faithfulness": {
+            "supported": 34,
+            "claims": 34
+          },
+          "extraction": {
+            "gold": 15,
+            "predicted": 16,
+            "matched": 6
+          },
+          "claims": [
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder should submit a copy of valid PAN and Goods and Service Tax registration (GST).",
+              "hypothesis": "The bidder must submit valid PAN and GST registration.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The agency should have an average annual turnover of Rs. 30 Lakh for the last three consecutive financial years: FY 2020-21, FY 2021-22, and FY 2022-23.",
+              "hypothesis": "The bidder must have an average annual turnover of Rs. 30 lakh for the last three financial years.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Average annual financial turnover of Sample Civil Works (Bidready Eval) Private Limited on construction works for the three financial years ending 31 March 2024 is Rs. 1,20,00,000.",
+              "hypothesis": "The turnover is Rs. 12,000,000, which is below the required Rs. 30,000,000.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder should not be blacklisted/ De-registered/ debarred by any Government department/ Public Sector Undertaking/ Private Sector/ or any other agency (Submit Undertaking as per Annexure-A).",
+              "hypothesis": "The bidder must not be blacklisted, de-registered, or debarred by any government department or agency.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Sample Civil Works (Bidready Eval) Private Limited has never been blacklisted by any government department or public sector undertaking.",
+              "hypothesis": "Sample Civil Works (Bidready Eval) Private Limited has never been blacklisted by any government department or public sector undertaking.",
+              "decision": "met",
+              "identical": true
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Bidders must submit documentary proof in support of meeting each of the above minimum qualification criteria.",
+              "hypothesis": "Documentary proof must be submitted for meeting each minimum qualification criteria.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Not a real certificate, not a real GSTIN, and not a real bidder.",
+              "hypothesis": "Not a real certificate, not a real GSTIN, and not a real bidder. The evidence provided is synthetic and does not meet the requirement of submitting documentary proof.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "A simple undertaking by the bidder for any of the stated criteria will not suffice for the purpose.",
+              "hypothesis": "A simple undertaking will not suffice for the stated criteria.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The EMD paid by the successful bidder shall be held/encashed by the IGIDR as security for the execution and fulfillment of the contract.",
+              "hypothesis": "The successful bidder must submit an EMD as security for contract execution.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The security deposit of the successful bidder will be forfeited if they fail to comply with any of the conditions of the contract.",
+              "hypothesis": "The bidder's security deposit will be forfeited for non-compliance with contract conditions.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "EMD \u20b9 Period of Contract (1) (2) (3) Annual Contract for the Engagement of the Ticket Booking Agency for Travel Desk Services (booking of Air/Rail tickets, Visa, etc.) at IGIDR Rs. 20,000/- One Year (Extendable for a further two years) The tenders are being invited for the services mentioned above.",
+              "hypothesis": "Earnest money deposit of Rs. 20,000 is required.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder has to submit an Earnest Money Deposit of Rs. 20,000/- (Rupees Twenty thousand only) along with the bid.",
+              "hypothesis": "Earnest money deposit of Rs. 20,000 must be submitted with the bid.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "SYNTHETIC \u2014 fictional bank solvency certificate created for the bidready evaluation.",
+              "hypothesis": "The evidence provided is synthetic and fictional, not a real earnest money deposit.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Account No. 010220100010001, IFSC code: BKID0000102, Branch name: IGIDR, Bank Name: Bank of India and UTR number with screenshot of transaction should be included in the part of tender document towards Earnest money.",
+              "hypothesis": "Bidder must provide account details, IFSC code, branch name, bank name, and UTR number with a screenshot for earnest money.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "SYNTHETIC \u2014 fictional PAN card created for the bidready evaluation.",
+              "hypothesis": "The evidence provided is a synthetic PAN card, not the required account details, IFSC code, branch name, bank name, and UTR number.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Bidders registered under MSME are exempted from submission of EMD but should submit a copy of the MSME certificate for exemption.",
+              "hypothesis": "Bidder registered under MSME must submit a copy of the MSME certificate for exemption from EMD.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The financial bid file should be protected with a password.",
+              "hypothesis": "The financial bid file must be protected with a password.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Reference: Tender Advertisement No. IGIDR/Tender/2024/ED/09 date: 18th May 2024 Dear Sir, With respect to your tender mentioned above, I / We hereby submit my / our tender bid in the required format along with the company profile and supporting documents.",
+              "hypothesis": "The bidder must submit the tender bid along with the company profile and supporting documents.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Should this tender be accepted, I/We hereby agree to abide by and fulfill the terms and provisions of the said Conditions of Contract annexed hereto so far as they may be applicable or in default thereof to forfeit the",
+              "hypothesis": "The bidder must agree to abide by the terms and conditions of the contract.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "EMD and pay to the IGIDR the amount mentioned in the said Conditions.",
+              "hypothesis": "The bidder must pay the specified amount as EMD if the tender is accepted.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Bidder must deposit Earnest Money of Rs. 20,000.00 (Rupees Twenty Thousand only) through",
+              "hypothesis": "Earnest money of Rs. 20,000 must be deposited.",
+              "identical": false
+            },
+            {
+              "kind": "risk",
+              "premise": "The successful bidder's Earnest Money Deposit (EMD) may be converted into a Performance Security Deposit. The security deposit of the successful bidder will be forfeited if they fail to comply with any of the conditions of the contract.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (high).",
+              "identical": false
+            },
+            {
+              "kind": "risk",
+              "premise": "If the successful bidder submits an MSME certificate for the EMD exemption, then they should deposit an amount of Rs. 20,000.00 towards the PSD in the form of DD/FDR/BG. PSD amount shall be released after the successful completion of all the contractual obligations.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (medium).",
+              "identical": false
+            },
+            {
+              "kind": "risk",
+              "premise": "The penalty shall be imposed on the successful bidder if the cause for such penalty is directly and solely attributable to them. The total cumulative penalty imposed on the bidder shall be 1% of the total invoice amount of the particular service of the respective order for which the penalty arises.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (high).",
+              "identical": false
+            },
+            {
+              "kind": "deadline",
+              "premise": "The bids should be received up to the end of the day on 8th June 2024.",
+              "hypothesis": "This tender sentence states the date or time of the Bid Submission Deadline.",
+              "identical": false
+            },
+            {
+              "kind": "deadline",
+              "premise": "The Institute shall inform the qualified bidders of the price bid opening date.",
+              "hypothesis": "This tender sentence states the date or time of the Financial Bid Opening.",
+              "identical": false
+            }
+          ],
+          "matrix_preview": [
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 10,
+              "clause": "5",
+              "text": "The bidder must submit valid PAN and GST registration."
+            },
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 10,
+              "clause": "5",
+              "text": "The bidder must have an average annual turnover of Rs. 30 lakh for the last three financial years."
+            },
+            {
+              "decision": "met",
+              "kind": "eligibility",
+              "page": 10,
+              "clause": "9",
+              "text": "The bidder must not be blacklisted, de-registered, or debarred by any government department or agency."
+            },
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 10,
+              "clause": "9",
+              "text": "Documentary proof must be submitted for meeting each minimum qualification criteria."
+            },
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 10,
+              "clause": "9",
+              "text": "A simple undertaking will not suffice for the stated criteria."
+            },
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 5,
+              "clause": "15",
+              "text": "The successful bidder must submit an EMD as security for contract execution."
+            },
+            {
+              "decision": "unclear",
+              "kind": "eligibility",
+              "page": 5,
+              "clause": "15",
+              "text": "The bidder's security deposit will be forfeited for non-compliance with contract conditions."
+            },
+            {
+              "decision": "unclear",
+              "kind": "eligibility",
+              "page": 2,
+              "clause": "3",
+              "text": "Earnest money deposit of Rs. 20,000 is required."
+            }
+          ]
+        },
+        {
+          "tender_id": "iiml-website",
+          "case_id": "2bd6cef4bfb4421fa47007c55fc427d5",
+          "status": "succeeded",
+          "go_no_go": "NO-GO",
+          "summary": "NO-GO. 4 supported, 11 contradicted, 9 missing and 1 unclear out of 25 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+          "requirements": 25,
+          "decisions": {
+            "met": 4,
+            "not_met": 11,
+            "missing": 9,
+            "unclear": 1
+          },
+          "risks": 3,
+          "deadlines": 4,
+          "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding IIM Lucknow annual maintenance contract for the institute website\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 1, page 4 (iiml-website.pdf).\n   Tender text: \"1) GST Registration No of the bidder/ firm along with the PAN number allotted by the concerned  authorities.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n2. Clause 3, page 4 (iiml-website.pdf).\n   Tender text: \"3) Bidders should not be under a declaration of ineligibility for corrupt and fraudulent practices.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n3. Clause 07231450000294, page 11 (iiml-website.pdf).\n   Tender text: \"Bidders are required to deposit an amount mentioned on first page of the tender document.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n4. Clause 07231450000294, page 11 (iiml-website.pdf).\n   Tender text: \"Towards Earnest Money Deposit (EMD) to below mentioned bank account of Institute on or before the last date & time mentioned above.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n5. Clause \u2014, page 2 (iiml-website.pdf).\n   Tender text: \"Earnest Money Deposit (EMD) \u2022 Rs. 50,000/- (Rupees Fifty Thousand only) (Must be submitted along with bid.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n6. Clause 07231450000294, page 14 (iiml-website.pdf).\n   Tender text: \"(Enclose copy of GST Registration & PAN card) b Submit Proof of Average Turnover of last three Financial Years (2021-22, 2022-23 & 2023-24) which should be more than 20 Lakhs.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n7. Clause \u2014, page 2 (iiml-website.pdf).\n   Tender text: \"Last date and time for submission of tender 30.09.2024 (4:00 pm)\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\n8. Clause \u2014, page 2 (iiml-website.pdf).\n   Tender text: \"Date and time for Opening of Technical Bid 01.10.2024 (11:00 am)\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]\nModel note on the queries: Please confirm whether an MSME or startup relaxation applies to the GST registration and PAN number requirement mentioned in Clause 1, page 4 (iiml-website.pdf), and which document should demonstrate it.\n",
+          "verification": {
+            "passed": true,
+            "failures": [],
+            "stripped": [],
+            "exhausted": false
+          },
+          "trace": [
+            {
+              "node": "planner",
+              "ms": 0,
+              "detail": "15 queries, 14 sections"
+            },
+            {
+              "node": "extractor",
+              "ms": 204328,
+              "detail": "25 requirements via llm_sections:23_batches:11 (v1)"
+            },
+            {
+              "node": "eligibility",
+              "ms": 377522,
+              "detail": "25 rows via llm"
+            },
+            {
+              "node": "risk",
+              "ms": 140902,
+              "detail": "3 risks, 4 deadlines via llm"
+            },
+            {
+              "node": "drafter",
+              "ms": 19089,
+              "detail": "8 cited queries via template_plus_llm_note"
+            },
+            {
+              "node": "verifier",
+              "ms": 0,
+              "detail": "passed"
+            }
+          ],
+          "latency_seconds": 744.229,
+          "latency_ms_recorded": 744159,
+          "prompt_tokens": 24393,
+          "completion_tokens": 2595,
+          "faithfulness": {
+            "supported": 50,
+            "claims": 50
+          },
+          "extraction": {
+            "gold": 15,
+            "predicted": 25,
+            "matched": 11
+          },
+          "claims": [
+            {
+              "kind": "tender_requirement",
+              "premise": "1) GST Registration No of the bidder/ firm along with the PAN number allotted by the concerned  authorities.",
+              "hypothesis": "The bidder must provide GST Registration No and PAN number.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "2) Average Turnover of last three financial years should be more than 20 Lakhs.",
+              "hypothesis": "Average turnover must be more than 20 Lakhs over the last three financial years.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Average annual financial turnover of Sample Civil Works (Bidready Eval) Private Limited on construction works for the three financial years ending 31 March 2024 is Rs. 1,20,00,000.",
+              "hypothesis": "The average annual financial turnover of 12,000,000 INR is more than the required 2,000,000 INR.",
+              "decision": "met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "3) Bidders should not be under a declaration of ineligibility for corrupt and fraudulent practices.",
+              "hypothesis": "The bidder must not be under a declaration of ineligibility for corrupt and fraudulent practices.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Sample Civil Works (Bidready Eval) Private Limited has never been blacklisted by any government department or public sector undertaking.",
+              "hypothesis": "The evidence provided is fictional and does not indicate that the company has not been declared ineligible for corrupt and fraudulent practices.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "4) The Bidder must be ISO 9001:2015 and (ISO 27001:2013 (or latest) or CMMI level 3/5) certification of IT/ITes  Services (Enclose Self-Attested Copy of certificate)",
+              "hypothesis": "ISO 9001:2015 and (ISO 27001:2013 or latest) or CMMI level 3/5 certification is required.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "5) The bidder must have minimum 40+ employees  on permanent rolls out of which at least 20 employees (including onsite manpower) must have recognized B.Tech/ B.E./M.C.A./ M.Tech/ M.Sc.",
+              "hypothesis": "The bidder must have a minimum of 40 permanent employees, with at least 20 having recognized B.Tech/B.E./M.C.A./M.Tech/M.Sc. degrees.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Average Annual Turnover of the Bidder in last three Financial Years i.e.",
+              "hypothesis": "Average annual turnover over the last three financial years is required.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Average annual financial turnover of Sample Civil Works (Bidready Eval) Private Limited on construction works for the three financial years ending 31 March 2024 is Rs. 1,20,00,000.",
+              "hypothesis": "The evidence span E1 shows an average annual turnover of Rs. 12,000,000 over the last three financial years, which meets the requirement.",
+              "decision": "met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Bidders are required to deposit an amount mentioned on first page of the tender document.",
+              "hypothesis": "Bid security must be deposited.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Towards Earnest Money Deposit (EMD) to below mentioned bank account of Institute on or before the last date & time mentioned above.",
+              "hypothesis": "Earnest money deposit (EMD) is required to be made.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "NSIC /MSME registered firms are exempted from submission of EMD on uploading of valid MSME certificate.",
+              "hypothesis": "MSME registered firms are exempted from submitting EMD.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "SYNTHETIC \u2014 fictional GST registration created for the bidready evaluation.",
+              "hypothesis": "The evidence is synthetic and fictional, but the requirement is for MSME registered firms to be exempted from submitting EMD, which is met by the exemption.",
+              "decision": "met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Earnest Money Deposit (EMD) \u2022 Rs. 50,000/- (Rupees Fifty Thousand only) (Must be submitted along with bid.",
+              "hypothesis": "EMD of Rs. 50,000 must be submitted with the bid.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Bank solvency certificate for Sample Civil Works (Bidready Eval) Private Limited for an amount of Rs. 40,00,000.",
+              "hypothesis": "The evidence provided is a fictional solvency certificate for an amount of Rs. 4,000,000, which does not meet the requirement of Rs. 50,000 EMD.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "(Enclose copy of GST Registration & PAN card) b Submit Proof of Average Turnover of last three Financial Years (2021-22, 2022-23 & 2023-24) which should be more than 20 Lakhs.",
+              "hypothesis": "Proof of average turnover over last three financial years must exceed Rs. 20 lakhs.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Average annual financial turnover of Sample Civil Works (Bidready Eval) Private Limited on construction works for the three financial years ending 31 March 2024 is Rs. 1,20,00,000.",
+              "hypothesis": "The average annual financial turnover of Sample Civil Works (Bidready Eval) Private Limited is Rs. 12,000,000, which is below the required Rs. 20,000,000.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "c Bidders should not be under a declaration of ineligibility for corrupt and fraudulent practices A self-declaration Certificate should be enclosed (Annexure-II) d",
+              "hypothesis": "The bidder must not be under a declaration of ineligibility for corrupt and fraudulent practices.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The Bidder must be ISO 9001:2015 and (ISO 27001:2013 (or latest) or CMMI level 3/5) certification of IT  Services Enclose Valid certificate e",
+              "hypothesis": "ISO 9001:2015 certification or equivalent is required.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder must have minimum 40+ employees on permanent rolls out of which at least 20 employees must have recognized B.Tech/ B.E./M.C.A./ M.Tech/ M.Sc.",
+              "hypothesis": "The bidder must have at least 40 permanent employees, with 20 holding B.Tech/B.E./M.C.A./M.Tech/M.Sc. degrees.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder must have at least five years experience in website development/ AMC related area.",
+              "hypothesis": "At least five years of experience in website development/AMC related area is required.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Interested vendors/agencies are requested to sign-in (new user sign-in only with DSC) online to obtain user-ID and password using Digital Signature.",
+              "hypothesis": "Vendors must sign-in with DSC to obtain user-ID and password.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The technical and financial bid duly filled must be uploaded on E- Portal of Govt. site i.e.",
+              "hypothesis": "Technical and financial bids must be uploaded on the E-Portal of the Govt. site.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The credentials as listed below shall be uploaded online.",
+              "hypothesis": "Credentials must be uploaded online as listed.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "SYNTHETIC \u2014 fictional GST registration created for the bidready evaluation.",
+              "hypothesis": "The evidence provided is a fictional GST registration created for the bidready evaluation, which does not meet the requirement of uploading actual credentials online.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder must submit fill & sign this format and provide the following information with supporting documents:",
+              "hypothesis": "Bidder must submit a filled and signed format with required information and supporting documents.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Not a real certificate, not a real GSTIN, and not a real bidder.",
+              "hypothesis": "The evidence provided is not a real certificate, GSTIN, or bidder.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder must have developed / maintained at least 3 websites (GIGW Compliant) successfully for any Govt.",
+              "hypothesis": "Bidder must have developed or maintained at least 3 GIGW compliant websites.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "This must include at least one website  development/ AMC work experience of any IIMs/IITs.",
+              "hypothesis": "Bidder must have at least one website development/AMC work experience from IIMs/IITs.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The Bidder must have successfully completed at least 3 Security Audit of GIGW Website from CERT-IN Empaneled Vendor in the last five years Enclose copy of Work Order along with Security Audit Certificate issued i",
+              "hypothesis": "Bidder must have completed at least 3 Security Audits of GIGW websites from CERT-IN empaneled vendors in the last five years, with Work Order and Security Audit Certificate.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The Bidder must have obtained at least two Website Quality/Compliance Certification from STQC or from any of its authorized I.T.",
+              "hypothesis": "Bidder must have obtained at least two Website Quality/Compliance Certifications from STQC or its authorized IT entities.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Not a real certificate, not a real GSTIN, and not a real bidder.",
+              "hypothesis": "The evidence states that the certificates are not real.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Enclose List of Backend support technical manpower with their Qualification & Experience on companies letter head k The resources of the bidder must be aware with the Guidelines for Indian Government Website (GIGW) & should have the designing, development & maintenance experience of websites compliant to",
+              "hypothesis": "Bidder must have backend support technical manpower with relevant qualifications and experience, and must be aware of GIGW guidelines and have experience in designing, developing, and maintaining GIGW compliant websites.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "3 It is further declared that all information provided in the bid submitted by the undersigned in complete and true and it is understood that in case any information is found to be false / misleading / undisclosed at any stage of the tender, appropriate action against such bidder will be taken by IIM Lucknow, which may include technical disqualification of the bid, forfeiture of EMD/Security deposit, blacklisting of the bidder\u2019s firm for a period of 2 years etc.",
+              "hypothesis": "Bidder must ensure the provided information is complete and true, with potential for technical disqualification, EMD forfeiture, or blacklisting if found false.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Sample Civil Works (Bidready Eval) Private Limited has never been blacklisted by any government department or public sector undertaking.",
+              "hypothesis": "Sample Civil Works (Bidready Eval) Private Limited has never been blacklisted by any government department or public sector undertaking.",
+              "decision": "met",
+              "identical": true
+            },
+            {
+              "kind": "risk",
+              "premise": "EMD of the successful bidder will be returned only after receipt of Security Deposit towards Performance Security Deposit.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (high).",
+              "identical": false
+            },
+            {
+              "kind": "risk",
+              "premise": "In case, the bidders provide false or misleading information or make changes in the downloaded document or provide forged document or hide facts relevant to tender / bidder, EMD of such bidder may be forfeited.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (high).",
+              "identical": false
+            },
+            {
+              "kind": "risk",
+              "premise": "Bidders with relevant MSME Certificate are exempted from EMD submission.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (medium).",
+              "identical": false
+            },
+            {
+              "kind": "deadline",
+              "premise": "Last date and time for submission of tender 30.09.2024 (4:00 pm)",
+              "hypothesis": "This tender sentence states the date or time of the Bid Submission.",
+              "identical": false
+            },
+            {
+              "kind": "deadline",
+              "premise": "Date and time for Opening of Technical Bid 01.10.2024 (11:00 am)",
+              "hypothesis": "This tender sentence states the date or time of the Bid Opening - Technical.",
+              "identical": false
+            },
+            {
+              "kind": "deadline",
+              "premise": "Date and time for Opening of Financial Bid Will be informed later to successful bidders through eProcure portal.",
+              "hypothesis": "This tender sentence states the date or time of the Bid Opening - Financial.",
+              "identical": false
+            },
+            {
+              "kind": "deadline",
+              "premise": "Bid Validity 120 days from the date of opening of bids.",
+              "hypothesis": "This tender sentence states the date or time of the Bid Validity.",
+              "identical": false
+            }
+          ],
+          "matrix_preview": [
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 4,
+              "clause": "1",
+              "text": "The bidder must provide GST Registration No and PAN number."
+            },
+            {
+              "decision": "met",
+              "kind": "eligibility",
+              "page": 4,
+              "clause": "2",
+              "text": "Average turnover must be more than 20 Lakhs over the last three financial years."
+            },
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 4,
+              "clause": "3",
+              "text": "The bidder must not be under a declaration of ineligibility for corrupt and fraudulent practices."
+            },
+            {
+              "decision": "missing",
+              "kind": "eligibility",
+              "page": 4,
+              "clause": "4",
+              "text": "ISO 9001:2015 and (ISO 27001:2013 or latest) or CMMI level 3/5 certification is required."
+            },
+            {
+              "decision": "missing",
+              "kind": "eligibility",
+              "page": 4,
+              "clause": "5",
+              "text": "The bidder must have a minimum of 40 permanent employees, with at least 20 having recognized B.Tech/B.E./M.C.A./M.Tech/M.Sc. degrees."
+            },
+            {
+              "decision": "met",
+              "kind": "eligibility",
+              "page": 9,
+              "clause": "3",
+              "text": "Average annual turnover over the last three financial years is required."
+            },
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 11,
+              "clause": "07231450000294",
+              "text": "Bid security must be deposited."
+            },
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 11,
+              "clause": "07231450000294",
+              "text": "Earnest money deposit (EMD) is required to be made."
+            }
+          ]
+        },
+        {
+          "tender_id": "iitpkd-ambulance-2024",
+          "case_id": "92304151fc3c42f48366e6344d86cc88",
+          "status": "succeeded",
+          "go_no_go": "NO-GO",
+          "summary": "NO-GO. 1 supported, 5 contradicted, 6 missing and 0 unclear out of 12 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+          "requirements": 12,
+          "decisions": {
+            "met": 1,
+            "not_met": 5,
+            "missing": 6,
+            "unclear": 0
+          },
+          "risks": 4,
+          "deadlines": 1,
+          "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding IIT Palakkad tender TENDER/2023-24/399 for an ambulance\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 3, page 3 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"(a) The bidder shall furnish EMD of Rs. 50,000/- (RUPEES FIFTY THOUSAND ONLY) through online payment gateway in the E- Wizard.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n2. Clause 5, page 3 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"(f) Information related to the agency/bidder such as photocopies of the Registration/PAN/GST/TIN shall be furnished.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n3. Clause 1, page 3 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"1) Should have implemented at least THREE ORDERS OF AMBULANCE during previous THREE financial years (2020-21, 2021-22, 2022-23) from Centrally Funded Technical Institutes (IITs, NITs, IISc, IISER), DRDO, ISRO, CSIR labs or Government Firms in India.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n4. Clause 3, page 3 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"The bidder shall enclose the audited statements of the indicated financial years, which should have been certified by a Chartered Accountant or a Competent Authority.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n5. Clause 2, page 2 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"Failure to furnish the information required by the Tender Document or submission of a tender not substantially responsive to the Tender Document in every respect will be at the bidder\u2019s risk and may result in rejection of the bid.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n6. Clause 6, page 4 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"(d) Failure of the successful Bidder to comply with the requirements shall constitute enough grounds for the annulment of the award and forfeiture of the EMD, in which event the IITPKD may make the award to the next lowest evaluated bid submitted by a qualified Bidder or call for new bids.\"\n   Query: Please confirm the acceptable form, the validity required, and the authority in whose favour this is to be drawn.\n\n7. Clause 6, page 4 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"Bids shall remain valid for a period of 180 DAYS after the date of the deadline for submission of bids prescribed by IITPKD.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]\nModel note on the queries: Please confirm whether an MSME or startup relaxation applies to the EMD threshold of Rs. 50,000, and which document should demonstrate it, as per Clause 3, page 3 (iitpkd-ambulance-2024.pdf): 'The bidder shall furnish EMD of Rs. 50,000/- (RUPEES FIFTY THOUSAND ONLY) through online payment gateway in the E- Wizard. '\n",
+          "verification": {
+            "passed": true,
+            "failures": [],
+            "stripped": [],
+            "exhausted": false
+          },
+          "trace": [
+            {
+              "node": "planner",
+              "ms": 0,
+              "detail": "15 queries, 45 sections"
+            },
+            {
+              "node": "extractor",
+              "ms": 139148,
+              "detail": "12 requirements via llm_sections:24_batches:11 (v1)"
+            },
+            {
+              "node": "eligibility",
+              "ms": 167086,
+              "detail": "12 rows via llm"
+            },
+            {
+              "node": "risk",
+              "ms": 153649,
+              "detail": "4 risks, 1 deadlines via llm"
+            },
+            {
+              "node": "drafter",
+              "ms": 30613,
+              "detail": "7 cited queries via template_plus_llm_note"
+            },
+            {
+              "node": "verifier",
+              "ms": 0,
+              "detail": "passed"
+            }
+          ],
+          "latency_seconds": 492.709,
+          "latency_ms_recorded": 492659,
+          "prompt_tokens": 17217,
+          "completion_tokens": 1709,
+          "faithfulness": {
+            "supported": 27,
+            "claims": 27
+          },
+          "extraction": {
+            "gold": 16,
+            "predicted": 12,
+            "matched": 6
+          },
+          "claims": [
+            {
+              "kind": "tender_requirement",
+              "premise": "(a) The bidder shall furnish EMD of Rs. 50,000/- (RUPEES FIFTY THOUSAND ONLY) through online payment gateway in the E- Wizard.",
+              "hypothesis": "Bidder must submit an EMD of Rs. 50,000 through an online payment gateway.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "(d) Failure of the successful Bidder to comply with the requirements shall constitute enough grounds for the annulment of the award and forfeiture of the EMD, in which event the IITPKD may make the award to the next lowest evaluated bid submitted by a qualified Bidder or call for new bids.",
+              "hypothesis": "Failure to comply with the requirements can lead to annulment of the award and forfeiture of the EMD.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The successful bidder shall furnish the Performance Security equal to 5% of the order/contract value (excluding the value of annual maintenance charges).",
+              "hypothesis": "Performance security equal to 5% of the order/contract value must be furnished.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The Performance Security shall be valid all along the warranty period and shall extend upto SIXTY DAYS after the date of completion of warranty period.",
+              "hypothesis": "Performance security must be valid until sixty days after the completion of the warranty period.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "(f) Information related to the agency/bidder such as photocopies of the Registration/PAN/GST/TIN shall be furnished.",
+              "hypothesis": "The bidder must provide photocopies of the Registration/PAN/GST/TIN.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "SYNTHETIC \u2014 fictional GST registration created for the bidready evaluation.",
+              "hypothesis": "All provided evidence is synthetic or fictional.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder should be a Class-I / Class-II Local Supplier meeting the requirement as per the Order No.",
+              "hypothesis": "The bidder must be a Class-I / Class-II Local Supplier.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "1) Should have implemented at least THREE ORDERS OF AMBULANCE during previous THREE financial years (2020-21, 2021-22, 2022-23) from Centrally Funded Technical Institutes (IITs, NITs, IISc, IISER), DRDO, ISRO, CSIR labs or Government Firms in India.",
+              "hypothesis": "The bidder must have implemented at least three orders of ambulance in the last three financial years.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "2) Should have an Average Annual Turnover of Rs 50,00,000 /- (RUPEES FIFTY LAKHS ONLY) during the last THREE financial years (2020-21, 2021-22, 2022-23).",
+              "hypothesis": "The bidder must have an average annual turnover of at least Rs 50,00,000 over the last three financial years.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Average annual financial turnover of Sample Civil Works (Bidready Eval) Private Limited on construction works for the three financial years ending 31 March 2024 is Rs. 1,20,00,000.",
+              "hypothesis": "The average annual financial turnover of Rs. 12,000,000 meets the requirement of at least Rs. 5,000,000.",
+              "decision": "met",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder shall enclose the audited statements of the indicated financial years, which should have been certified by a Chartered Accountant or a Competent Authority.",
+              "hypothesis": "The bidder must submit audited financial statements certified by a Chartered Accountant or a Competent Authority.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "bidder within 20 to 25 days from the date of its receipt.",
+              "hypothesis": "Installation and commissioning must be completed within 20 to 25 days after receipt.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "The bidder should be a Class-I / Class-II Local Supplier meeting the requirement of minimum 20% Local Content in line with the Public Procurement (Preference to Make in India) Order 2017 No. P-45021/2/2017-PP(BE-II) dated 16-09-2020.",
+              "hypothesis": "The bidder must be a Class-I or Class-II Local Supplier with at least 20% Local Content.",
+              "identical": false
+            },
+            {
+              "kind": "tender_requirement",
+              "premise": "Failure to furnish the information required by the Tender Document or submission of a tender not substantially responsive to the Tender Document in every respect will be at the bidder\u2019s risk and may result in rejection of the bid.",
+              "hypothesis": "The bidder must provide all required information and ensure the tender is fully responsive, or risk bid rejection.",
+              "identical": false
+            },
+            {
+              "kind": "evidence_decision",
+              "premise": "Not a real certificate, not a real GSTIN, and not a real bidder.",
+              "hypothesis": "The evidence indicates that the bidder is not real, which means they do not provide all required information and cannot ensure the tender is fully responsive.",
+              "decision": "not_met",
+              "identical": false
+            },
+            {
+              "kind": "risk",
+              "premise": "In case there is any deviation in the delivery schedule, liquidated damages clause will be enforced or penalty for the delayed supply period will be levied.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (high).",
+              "identical": false
+            },
+            {
+              "kind": "risk",
+              "premise": "If a firm accepts an order and fails to execute the order, in full or part, as per the terms and conditions stipulated therein, it will be open to the Institute to recover liquidated damages from the firm at the rate of 1% of the value of the undelivered goods per month or part thereof, subject to a maximum of 5% of the value of the undelivered goods.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (high).",
+              "identical": false
+            },
+            {
+              "kind": "risk",
+              "premise": "If the Supplier fails to complete any of the activities in accordance with the time specified for it, or any extension of time granted by IITPKD, Liquidated Damages Clause shall be invoked.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (high).",
+              "identical": false
+            },
+            {
+              "kind": "risk",
+              "premise": "Give rise to any claim for damages or additional cost or expense occasioned by the delay or non-performance.",
+              "hypothesis": "This tender sentence states a contractual risk or penalty (medium).",
+              "identical": false
+            },
+            {
+              "kind": "deadline",
+              "premise": "Bids shall remain valid for a period of 180 DAYS after the date of the deadline for submission of bids prescribed by IITPKD.",
+              "hypothesis": "This tender sentence states the date or time of the Bid Validity Period.",
+              "identical": false
+            }
+          ],
+          "matrix_preview": [
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 3,
+              "clause": "3",
+              "text": "Bidder must submit an EMD of Rs. 50,000 through an online payment gateway."
+            },
+            {
+              "decision": "missing",
+              "kind": "eligibility",
+              "page": 4,
+              "clause": "6",
+              "text": "Failure to comply with the requirements can lead to annulment of the award and forfeiture of the EMD."
+            },
+            {
+              "decision": "missing",
+              "kind": "eligibility",
+              "page": 3,
+              "clause": "3",
+              "text": "Performance security equal to 5% of the order/contract value must be furnished."
+            },
+            {
+              "decision": "missing",
+              "kind": "eligibility",
+              "page": 3,
+              "clause": "3",
+              "text": "Performance security must be valid until sixty days after the completion of the warranty period."
+            },
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 3,
+              "clause": "5",
+              "text": "The bidder must provide photocopies of the Registration/PAN/GST/TIN."
+            },
+            {
+              "decision": "missing",
+              "kind": "eligibility",
+              "page": 1,
+              "clause": "2",
+              "text": "The bidder must be a Class-I / Class-II Local Supplier."
+            },
+            {
+              "decision": "not_met",
+              "kind": "eligibility",
+              "page": 3,
+              "clause": "1",
+              "text": "The bidder must have implemented at least three orders of ambulance in the last three financial years."
+            },
+            {
+              "decision": "met",
+              "kind": "eligibility",
+              "page": 3,
+              "clause": "2",
+              "text": "The bidder must have an average annual turnover of at least Rs 50,00,000 over the last three financial years."
+            }
+          ]
+        }
+      ],
+      "faithfulness": {
+        "supported": 111,
+        "claims": 111,
+        "rate": 1.0
+      },
+      "latency_seconds": {
+        "per_tender": [
+          {
+            "id": "igidr-travel-2024",
+            "seconds": 611.679
+          },
+          {
+            "id": "iiml-website",
+            "seconds": 744.229
+          },
+          {
+            "id": "iitpkd-ambulance-2024",
+            "seconds": 492.709
+          }
+        ],
+        "total": 1848.617
+      },
+      "semantic_faithfulness": {
+        "model": "cross-encoder/nli-MiniLM2-L6-H768",
+        "n": 88,
+        "entailment": 55,
+        "contradiction": 7,
+        "neutral": 26,
+        "rate": 0.625,
+        "nonidentical_n": 86,
+        "nonidentical_entailment": 53,
+        "headline_rate": 0.6162790697674418,
+        "headline": "entailment among pairs whose premise and hypothesis are not the same string",
+        "by_kind": {
+          "tender_requirement": {
+            "n": 53,
+            "entailment": 44,
+            "identical": 0
+          },
+          "evidence_decision": {
+            "n": 18,
+            "entailment": 5,
+            "identical": 2
+          },
+          "risk": {
+            "n": 10,
+            "entailment": 0,
+            "identical": 0
+          },
+          "deadline": {
+            "n": 7,
+            "entailment": 6,
+            "identical": 0
+          }
+        },
+        "sample": [
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "The bidder should submit a copy of valid PAN and Goods and Service Tax registration (GST).",
+            "hypothesis": "The bidder must submit valid PAN and GST registration.",
+            "decision": null
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "The agency should have an average annual turnover of Rs. 30 Lakh for the last three consecutive financial years: FY 2020-21, FY 2021-22, and FY 2022-23.",
+            "hypothesis": "The bidder must have an average annual turnover of Rs. 30 lakh for the last three financial years.",
+            "decision": null
+          },
+          {
+            "kind": "evidence_decision",
+            "label": "contradiction",
+            "identical": false,
+            "premise": "Average annual financial turnover of Sample Civil Works (Bidready Eval) Private Limited on construction works for the three financial years ending 31 March 2024 is Rs. 1,20,00,000.",
+            "hypothesis": "The turnover is Rs. 12,000,000, which is below the required Rs. 30,000,000.",
+            "decision": "not_met"
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "The bidder should not be blacklisted/ De-registered/ debarred by any Government department/ Public Sector Undertaking/ Private Sector/ or any other agency (Submit Undertaking as per Annexure-A).",
+            "hypothesis": "The bidder must not be blacklisted, de-registered, or debarred by any government department or agency.",
+            "decision": null
+          },
+          {
+            "kind": "evidence_decision",
+            "label": "entailment",
+            "identical": true,
+            "premise": "Sample Civil Works (Bidready Eval) Private Limited has never been blacklisted by any government department or public sector undertaking.",
+            "hypothesis": "Sample Civil Works (Bidready Eval) Private Limited has never been blacklisted by any government department or public sector undertaking.",
+            "decision": "met"
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "Bidders must submit documentary proof in support of meeting each of the above minimum qualification criteria.",
+            "hypothesis": "Documentary proof must be submitted for meeting each minimum qualification criteria.",
+            "decision": null
+          },
+          {
+            "kind": "evidence_decision",
+            "label": "neutral",
+            "identical": false,
+            "premise": "Not a real certificate, not a real GSTIN, and not a real bidder.",
+            "hypothesis": "Not a real certificate, not a real GSTIN, and not a real bidder. The evidence provided is synthetic and does not meet the requirement of submitting documentary proof.",
+            "decision": "not_met"
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "A simple undertaking by the bidder for any of the stated criteria will not suffice for the purpose.",
+            "hypothesis": "A simple undertaking will not suffice for the stated criteria.",
+            "decision": null
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "The EMD paid by the successful bidder shall be held/encashed by the IGIDR as security for the execution and fulfillment of the contract.",
+            "hypothesis": "The successful bidder must submit an EMD as security for contract execution.",
+            "decision": null
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "The security deposit of the successful bidder will be forfeited if they fail to comply with any of the conditions of the contract.",
+            "hypothesis": "The bidder's security deposit will be forfeited for non-compliance with contract conditions.",
+            "decision": null
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "neutral",
+            "identical": false,
+            "premise": "EMD \u20b9 Period of Contract (1) (2) (3) Annual Contract for the Engagement of the Ticket Booking Agency for Travel Desk Services (booking of Air/Rail tickets, Visa, etc.) at IGIDR Rs. 20,000/- One Year (Extendable for a further two years) The tenders are being invited for the services mentioned above.",
+            "hypothesis": "Earnest money deposit of Rs. 20,000 is required.",
+            "decision": null
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "The bidder has to submit an Earnest Money Deposit of Rs. 20,000/- (Rupees Twenty thousand only) along with the bid.",
+            "hypothesis": "Earnest money deposit of Rs. 20,000 must be submitted with the bid.",
+            "decision": null
+          },
+          {
+            "kind": "evidence_decision",
+            "label": "entailment",
+            "identical": false,
+            "premise": "SYNTHETIC \u2014 fictional bank solvency certificate created for the bidready evaluation.",
+            "hypothesis": "The evidence provided is synthetic and fictional, not a real earnest money deposit.",
+            "decision": "not_met"
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "Account No. 010220100010001, IFSC code: BKID0000102, Branch name: IGIDR, Bank Name: Bank of India and UTR number with screenshot of transaction should be included in the part of tender document towards Earnest money.",
+            "hypothesis": "Bidder must provide account details, IFSC code, branch name, bank name, and UTR number with a screenshot for earnest money.",
+            "decision": null
+          },
+          {
+            "kind": "evidence_decision",
+            "label": "neutral",
+            "identical": false,
+            "premise": "SYNTHETIC \u2014 fictional PAN card created for the bidready evaluation.",
+            "hypothesis": "The evidence provided is a synthetic PAN card, not the required account details, IFSC code, branch name, bank name, and UTR number.",
+            "decision": "not_met"
+          },
+          {
+            "kind": "tender_requirement",
+            "label": "entailment",
+            "identical": false,
+            "premise": "Bidders registered under MSME are exempted from submission of EMD but should submit a copy of the MSME certificate for exemption.",
+            "hypothesis": "Bidder registered under MSME must submit a copy of the MSME certificate for exemption from EMD.",
+            "decision": null
+          }
+        ],
+        "rule": "argmax over contradiction, entailment, neutral. Supported means entailment."
+      }
+    }
+  },
+  "llm_eligibility": {
+    "n": 12,
+    "correct": 6,
+    "accuracy": 0.5,
+    "confusion": {
+      "met->met": 4,
+      "missing->missing": 1,
+      "met->not_met": 4,
+      "met->unclear": 1,
+      "not_met->not_met": 1,
+      "missing->met": 1
+    },
+    "judge": "llm",
+    "cited": 8,
+    "rows": [
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true,
+        "source": "llm",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The turnover of 12,000,000 INR for the last three financial years exceeds the required 3,000,000 INR."
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true,
+        "source": "llm",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The turnover of 40,00,000 INR is above the required 30,00,000 INR."
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true,
+        "source": "llm",
+        "rule_decision": "missing",
+        "cited": false,
+        "rationale": "None of the evidence spans mention the earnest money deposit requirement."
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "not_met",
+        "correct": false,
+        "source": "llm",
+        "rule_decision": "met",
+        "cited": false,
+        "rationale": "Both PAN and GST registration are synthetic and fictional, not valid."
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "gst",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "not_met",
+        "correct": false,
+        "source": "llm",
+        "rule_decision": "met",
+        "cited": false,
+        "rationale": "The provided evidence includes synthetic documents for both PAN and GST registration, which do not meet the requirement of valid documents."
+      },
+      {
+        "tender_id": "iiml-website",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "not_met",
+        "correct": false,
+        "source": "llm",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The average annual financial turnover is 12000000 INR, which is less than the required 2000000 INR."
+      },
+      {
+        "tender_id": "iiml-website",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true,
+        "source": "llm",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The turnover of 40,00,000 INR meets the requirement of more than 20 Lakhs."
+      },
+      {
+        "tender_id": "iiml-website",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "unclear",
+        "correct": false,
+        "source": "llm",
+        "rule_decision": "met",
+        "cited": false,
+        "rationale": "The provided evidence spans are synthetic and fictional, and do not meet the requirement for a valid GST registration and PAN card."
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "not_met",
+        "correct": false,
+        "source": "llm",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The company's turnover is Rs. 12,000,000, which does not meet the requirement of Rs. 50,00,000 for three consecutive financial years."
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "not_met",
+        "predicted": "not_met",
+        "correct": true,
+        "source": "llm",
+        "rule_decision": "not_met",
+        "cited": true,
+        "rationale": "The turnover for the three financial years is less than the required Rs 5000000 INR."
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "met",
+        "correct": false,
+        "source": "llm",
+        "rule_decision": "missing",
+        "cited": true,
+        "rationale": "The EMD amount of Rs. 4,000,000 meets the requirement of Rs. 50,000."
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true,
+        "source": "llm",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The evidence provides the legal name of the bidder, Sample Civil Works (Bidready Eval) Private Limited."
+      }
+    ]
+  },
+  "hybrid_eligibility": {
+    "n": 12,
+    "correct": 7,
+    "accuracy": 0.5833333333333334,
+    "confusion": {
+      "met->met": 5,
+      "missing->missing": 1,
+      "met->not_met": 4,
+      "not_met->not_met": 1,
+      "missing->unclear": 1
+    },
+    "judge": "hybrid",
+    "cited": 11,
+    "rows": [
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true,
+        "source": "hybrid",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The turnover for Sample Civil Works (Bidready Eval) Private Limited for the three financial years is Rs. 12,000,000, which exceeds the required Rs. 3,000,000."
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true,
+        "source": "hybrid",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The turnover of Rs. 40,00,000 for the three financial years is above the required Rs. 30,00,000."
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true,
+        "source": "hybrid",
+        "rule_decision": "missing",
+        "cited": false,
+        "rationale": "No evidence of an Earnest Money Deposit being submitted with the bid."
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true,
+        "source": "hybrid",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The evidence shows a valid Goods and Services Tax registration certificate, meeting the requirement."
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "gst",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "not_met",
+        "correct": false,
+        "source": "hybrid",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The provided evidence is a synthetic and fictional GST registration created for the bidready evaluation, which does not meet the requirement."
+      },
+      {
+        "tender_id": "iiml-website",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "not_met",
+        "correct": false,
+        "source": "hybrid",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The average annual financial turnover of Sample Civil Works (Bidready Eval) Private Limited is Rs. 12,000,000, which is less than the required Rs. 20,000,000."
+      },
+      {
+        "tender_id": "iiml-website",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true,
+        "source": "hybrid",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "Average annual financial turnover of Sample Security Agency (Bidready Eval) on security services for the three financial years ending 31 March 2024 is Rs. 40,00,000, which exceeds the required 20 Lakhs."
+      },
+      {
+        "tender_id": "iiml-website",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "not_met",
+        "correct": false,
+        "source": "hybrid",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The provided GST registration is synthetic and fictional, not a genuine certificate."
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true,
+        "source": "hybrid",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The average annual turnover of Rs. 12,000,000 for the three financial years ending 31 March 2024 exceeds the required Rs. 5,000,000."
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "not_met",
+        "predicted": "not_met",
+        "correct": true,
+        "source": "hybrid",
+        "rule_decision": "not_met",
+        "cited": true,
+        "rationale": "The average annual turnover for Sample Security Agency is Rs. 40,00,000, which does not meet the requirement of Rs. 50,00,000."
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "unclear",
+        "correct": false,
+        "source": "hybrid",
+        "rule_decision": "missing",
+        "cited": true,
+        "rationale": "The evidence spans are synthetic or fictional, and no real EMD is provided."
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "not_met",
+        "correct": false,
+        "source": "hybrid",
+        "rule_decision": "met",
+        "cited": true,
+        "rationale": "The provided evidence is a synthetic, fictional GST registration, which does not meet the requirement for a real Registration/PAN/GST/TIN."
+      }
+    ]
+  }
+}
