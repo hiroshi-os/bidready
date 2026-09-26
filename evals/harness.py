@@ -533,6 +533,8 @@ def score_nli(cases: dict, model_name: str = "cross-encoder/nli-MiniLM2-L6-H768"
     counts = {name: 0 for name in names}
     by_kind: dict[str, dict] = {}
     sample = []
+    nonidentical_n = 0
+    nonidentical_entailment = 0
     for pair, row in zip(labelled, scores, strict=True):
         label = names[int(row.argmax())]
         counts[label] += 1
@@ -543,6 +545,10 @@ def score_nli(cases: dict, model_name: str = "cross-encoder/nli-MiniLM2-L6-H768"
             bucket["entailment"] += 1
         if pair.get("identical"):
             bucket["identical"] += 1
+        else:
+            nonidentical_n += 1
+            if label == "entailment":
+                nonidentical_entailment += 1
         if len(sample) < 16:
             sample.append(
                 {
@@ -566,14 +572,25 @@ def score_nli(cases: dict, model_name: str = "cross-encoder/nli-MiniLM2-L6-H768"
         "contradiction": counts["contradiction"],
         "neutral": counts["neutral"],
         "rate": counts["entailment"] / n if n else None,
+        "nonidentical_n": nonidentical_n,
+        "nonidentical_entailment": nonidentical_entailment,
+        "headline_rate": (nonidentical_entailment / nonidentical_n) if nonidentical_n else None,
+        "headline": "entailment among pairs whose premise and hypothesis are not the same string",
         "by_kind": by_kind,
         "sample": sample,
         "rule": "argmax over contradiction, entailment, neutral. Supported means entailment.",
     }
 
 
-def llm_eligibility(llm, embedder, reranker, tender_ids: list[str] | None = None) -> dict:
-    """Gold eligibility judged by the LLM, with no rule fallback."""
+def llm_eligibility(
+    llm,
+    embedder,
+    reranker,
+    tender_ids: list[str] | None = None,
+    *,
+    show_rule: bool = False,
+) -> dict:
+    """Gold eligibility. show_rule=False is the model alone. show_rule=True adjudicates the rule pre-screen."""
     from bidready.graph import RunContext, _llm_decisions
 
     manifest = load_manifest()
@@ -624,8 +641,14 @@ def llm_eligibility(llm, embedder, reranker, tender_ids: list[str] | None = None
                 ],
                 "",
                 None,
+                show_rule=show_rule,
             )
             predicted = decided[0]["decision"] if decided else "error"
+            print(
+                f"eligibility {tender['id']} {requirement['id']} {label['profile']} "
+                f"{label['expected']} -> {predicted} span={bool(decided and decided[0].get('evidence_quote'))}",
+                flush=True,
+            )
             rows.append(
                 {
                     "tender_id": tender["id"],
@@ -635,12 +658,15 @@ def llm_eligibility(llm, embedder, reranker, tender_ids: list[str] | None = None
                     "predicted": predicted,
                     "correct": predicted == label["expected"],
                     "source": source,
+                    "rule_decision": decided[0].get("rule_decision") if decided else None,
+                    "cited": bool(decided and decided[0].get("evidence_quote")),
                     "rationale": (decided[0].get("rationale") if decided else "")[:300],
                 }
             )
             del ctx
     summary = _eligibility_summary(rows)
-    summary["judge"] = "llm"
+    summary["judge"] = "hybrid" if show_rule else "llm"
+    summary["cited"] = sum(1 for row in rows if row.get("cited"))
     return summary
 
 

@@ -115,6 +115,7 @@ def _local(args) -> None:
         scored["tenders"] = [row for row in scored["tenders"] if row["id"] in wanted]
     by_prompt = {}
     eligibility = None
+    hybrid = None
 
     def dump(partial: bool) -> None:
         payload = {
@@ -126,9 +127,10 @@ def _local(args) -> None:
             "reranker_model": args.reranker_model,
             "tender_ids": tender_ids,
             "note": (
-                "Retrieval, extraction, eligibility and faithfulness below are from the local model. "
-                "The heuristic_* fields are the cue extractor and the rule checker on this same label "
-                "set, not the earlier mock-baseline file."
+                "llm_eligibility is the local model choosing a span id, with no rule proposal. "
+                "hybrid_eligibility shows the rule checker's proposal and asks the model to agree or override. "
+                "semantic_faithfulness.headline_rate excludes pairs whose two sides are the same string. "
+                "heuristic_* is the cue extractor and the rule checker, not the earlier mock-baseline file."
             ),
             "retrieval": scored["retrieval"],
             "tenders": scored["tenders"],
@@ -137,9 +139,8 @@ def _local(args) -> None:
                 key: scored["eligibility"][key] for key in ("n", "correct", "accuracy", "confusion")
             },
             "prompts": by_prompt,
-            "llm_eligibility": None
-            if eligibility is None
-            else {key: eligibility[key] for key in ("n", "correct", "accuracy", "confusion", "judge", "rows")},
+            "llm_eligibility": _eligibility_payload(eligibility),
+            "hybrid_eligibility": _eligibility_payload(hybrid),
         }
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -160,7 +161,11 @@ def _local(args) -> None:
     print("gold eligibility with the llm", flush=True)
     embedder = build_embedder("sentence-transformers", args.embedding_model)
     reranker = build_reranker("cross-encoder", args.reranker_model)
-    eligibility = llm_eligibility(build_llm(settings), embedder, reranker, tender_ids)
+    llm = build_llm(settings)
+    eligibility = llm_eligibility(llm, embedder, reranker, tender_ids, show_rule=False)
+    dump(True)
+    print("gold eligibility hybrid adjudication", flush=True)
+    hybrid = llm_eligibility(llm, embedder, reranker, tender_ids, show_rule=True)
     dump(False)
     print(out)
     for prompt, cases in by_prompt.items():
@@ -171,9 +176,20 @@ def _local(args) -> None:
             f"prompt {prompt}: extraction matched={extraction.get('matched')}/{extraction.get('gold')} "
             f"precision={extraction.get('precision')} recall={extraction.get('recall')} "
             f"span {faith.get('supported')}/{faith.get('claims')} "
-            f"nli {semantic.get('entailment')}/{semantic.get('n')}"
+            f"nli headline {semantic.get('nonidentical_entailment')}/{semantic.get('nonidentical_n')}"
         )
-    print(f"llm eligibility {eligibility.get('correct')}/{eligibility.get('n')}")
+    print(
+        f"llm eligibility {eligibility.get('correct')}/{eligibility.get('n')} "
+        f"cited {eligibility.get('cited')}"
+    )
+    print(f"hybrid eligibility {hybrid.get('correct')}/{hybrid.get('n')} cited {hybrid.get('cited')}")
+
+
+def _eligibility_payload(summary: dict | None) -> dict | None:
+    if summary is None:
+        return None
+    keys = ("n", "correct", "accuracy", "confusion", "judge", "cited", "rows")
+    return {key: summary[key] for key in keys if key in summary}
 
 
 def _check() -> None:
