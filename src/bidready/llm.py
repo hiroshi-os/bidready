@@ -98,12 +98,14 @@ class OllamaLLM(_ChatLLM):
                 "model": self.model,
                 "stream": False,
                 "format": "json",
+                "keep_alive": "30m",
+                "options": {"temperature": 0, "num_predict": 900, "num_ctx": 4096},
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": user},
                 ],
             },
-            timeout=180,
+            timeout=300,
         )
         response.raise_for_status()
         payload = response.json()
@@ -142,9 +144,37 @@ def _parse_json(text: str) -> dict:
         parsed = json.loads(text)
     except json.JSONDecodeError:
         match = re.search(r"\{.*\}", text, re.DOTALL)
-        if not match:
-            raise
-        parsed = json.loads(match.group(0))
+        if match:
+            try:
+                parsed = json.loads(match.group(0))
+            except json.JSONDecodeError:
+                parsed = _repair_json(text)
+        else:
+            parsed = _repair_json(text)
     if not isinstance(parsed, dict):
         raise json.JSONDecodeError("expected an object", text, 0)
     return parsed
+
+
+def _repair_json(text: str) -> dict:
+    """Close a JSON object that the model truncated at num_predict."""
+    start = text.find("{")
+    if start < 0:
+        raise json.JSONDecodeError("no object", text, 0)
+    snippet = text[start:]
+    for end in range(len(snippet), 0, -1):
+        if snippet[end - 1] not in "}]":
+            continue
+        candidate = snippet[:end]
+        open_brace = candidate.count("{") - candidate.count("}")
+        open_bracket = candidate.count("[") - candidate.count("]")
+        if open_brace < 0 or open_bracket < 0:
+            continue
+        candidate = candidate + ("]" * open_bracket) + ("}" * open_brace)
+        try:
+            parsed = json.loads(candidate)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+    raise json.JSONDecodeError("unrepairable", text, 0)

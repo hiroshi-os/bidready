@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import time
 from dataclasses import dataclass, field
 from operator import add
@@ -26,6 +27,7 @@ from bidready.textutil import clause_from_text, quote_supported
 from bidready.verify import first_stage, strip_unsupported, unsupported_claims
 
 MAX_STAGE_RETRIES = 2
+_OBLIGATION = re.compile(r"\b(shall|should|must|required|bidder|emd|earnest)\b", re.IGNORECASE)
 
 
 class GraphState(TypedDict, total=False):
@@ -50,6 +52,7 @@ class RunContext:
     company_index: HybridIndex
     prompt_version: str = "v1"
     title: str = ""
+    allow_heuristic_fallback: bool = True
     hooks: dict[str, Any] = field(default_factory=dict)
 
 
@@ -77,7 +80,7 @@ def build_graph(ctx: RunContext):
         policy = "v2" if state.get("feedback") and state.get("next_node") == "extractor" else ctx.prompt_version
         # The heuristic reads every tender chunk. Retrieval still plans the run and
         # feeds the LLM path, which only sees a short window of chunks.
-        retrieved = candidate_chunks(ctx.tender_index, (state.get("plan") or {}).get("queries"))
+        retrieved = chunks_for_llm(ctx.tender_index, (state.get("plan") or {}).get("queries"))
         source = "heuristic"
         if ctx.hooks.get("extract"):
             requirements = ctx.hooks["extract"](state, retrieved)
@@ -96,14 +99,13 @@ def build_graph(ctx: RunContext):
         cost = estimated_cost_inr(list(ctx.tender_index.chunks.values()))
         rows = []
         source = "rules"
-        for requirement in state.get("requirements") or []:
-            hits = ctx.company_index.search(requirement.get("text") or "", k=8, mode="hybrid_rerank")
-            if ctx.llm.provider == "mock" or ctx.hooks.get("force_rules"):
+        requirements = list(state.get("requirements") or [])
+        if ctx.llm.provider == "mock" or ctx.hooks.get("force_rules"):
+            for requirement in requirements:
+                hits = ctx.company_index.search(requirement.get("text") or "", k=8, mode="hybrid_rerank")
                 rows.append(decide(requirement, hits, estimated_cost_inr=cost))
-            else:
-                row, row_source = _llm_decision(ctx, requirement, hits, state.get("feedback") or "", cost)
-                rows.append(row)
-                source = row_source
+        else:
+            rows, source = _llm_decisions(ctx, requirements, state.get("feedback") or "", cost)
         return {"matrix": rows, "trace": [_event("eligibility", started, f"{len(rows)} rows via {source}")]}
 
     def risk(state: GraphState) -> dict:
@@ -116,12 +118,16 @@ def build_graph(ctx: RunContext):
             try:
                 risks, deadlines = _llm_risks(ctx, chunks, state.get("feedback") or "")
                 source = "llm"
-                if not risks and not deadlines:
+                if not risks and not deadlines and ctx.allow_heuristic_fallback:
                     risks, deadlines = extract_risks_and_deadlines(chunks)
                     source = "llm_empty_fallback_heuristic"
             except Exception as exc:
-                risks, deadlines = extract_risks_and_deadlines(chunks)
-                source = f"fallback:{type(exc).__name__}"
+                if ctx.allow_heuristic_fallback:
+                    risks, deadlines = extract_risks_and_deadlines(chunks)
+                    source = f"fallback:{type(exc).__name__}"
+                else:
+                    risks, deadlines = [], []
+                    source = f"llm_error:{type(exc).__name__}"
         return {
             "risks": risks,
             "deadlines": deadlines,
@@ -236,10 +242,24 @@ def _event(node: str, started: float, detail: str) -> dict:
 
 
 def _risk_chunks(ctx: RunContext, state: GraphState) -> list[Chunk]:
-    if len(ctx.tender_index.chunks) <= 80:
+    # Mock mode still scans a short pack in full. A local model only reads a
+    # retrieved window, otherwise the first pages crowd out penalties and dates.
+    if ctx.llm.provider == "mock" and len(ctx.tender_index.chunks) <= 80:
         return list(ctx.tender_index.chunks.values())
     queries = ["penalty liquidated damages earnest money forfeiture", "pre-bid meeting bid submission opening date"]
-    return candidate_chunks(ctx.tender_index, queries, k=10)
+    if ctx.llm.provider == "mock":
+        return candidate_chunks(ctx.tender_index, queries, k=10)
+    chosen: list[Chunk] = []
+    seen: set[str] = set()
+    for query in queries:
+        for chunk in ctx.tender_index.search(query, k=6, mode="hybrid_rerank"):
+            if chunk.id in seen:
+                continue
+            seen.add(chunk.id)
+            chosen.append(chunk)
+            if len(chosen) >= 8:
+                return chosen
+    return chosen
 
 
 def _format_chunks(chunks: list[Chunk], limit: int = 12) -> str:
@@ -252,39 +272,190 @@ def _format_chunks(chunks: list[Chunk], limit: int = 12) -> str:
     return "\n\n".join(blocks)
 
 
+LLM_CHUNK_LIMIT = 12
+LLM_BATCH_SIZE = 3
+
+
+def chunks_for_llm(index: HybridIndex, queries: list[str] | None = None, limit: int = LLM_CHUNK_LIMIT) -> list[Chunk]:
+    """Chunks the local model actually reads.
+
+    Hybrid retrieval fills the window. If that window is short, obligation-like
+    chunks that retrieval missed are appended until `limit`. The model does not
+    see the rest of the pack.
+    """
+    ranked: list[Chunk] = []
+    seen: set[str] = set()
+    for query in queries or PLANNER_QUERIES:
+        for chunk in index.search(query, k=4, mode="hybrid_rerank"):
+            if chunk.id in seen:
+                continue
+            seen.add(chunk.id)
+            ranked.append(chunk)
+            if len(ranked) >= limit:
+                return ranked
+    for chunk in index.order:
+        if chunk.id in seen:
+            continue
+        if not _OBLIGATION.search(chunk.text):
+            continue
+        ranked.append(chunk)
+        seen.add(chunk.id)
+        if len(ranked) >= limit:
+            break
+    return ranked
+
+
 def _llm_requirements(ctx: RunContext, chunks: list[Chunk], policy: str, feedback: str) -> tuple[list[dict], str]:
     system = PROMPT_BY_VERSION.get(policy, PROMPT_BY_VERSION["v1"])
-    user = _format_chunks(chunks)
-    if feedback:
-        user += "\n\nVerifier feedback: " + feedback
-    try:
-        payload = ctx.llm.complete_json(system=system, user=user)
-    except Exception as exc:
-        return extract_requirements(chunks, policy), f"fallback:{type(exc).__name__}"
-    rows = []
-    for item in payload.get("requirements") or []:
-        if not isinstance(item, dict):
+    rows: list[dict] = []
+    seen: set[str] = set()
+    errors = 0
+    for start in range(0, len(chunks), LLM_BATCH_SIZE):
+        batch = chunks[start : start + LLM_BATCH_SIZE]
+        user = _format_chunks(batch, limit=LLM_BATCH_SIZE)
+        if feedback:
+            user += "\n\nVerifier feedback: " + feedback
+        try:
+            payload = ctx.llm.complete_json(system=system, user=user)
+        except Exception:
+            errors += 1
             continue
-        chunk_id = str(item.get("chunk_id") or "")
-        chunk = ctx.tender_index.chunks.get(chunk_id)
-        quote = str(item.get("quote") or "").strip()
-        if not quote:
-            continue
-        rows.append(
-            {
-                "kind": item.get("kind") or "eligibility",
-                "text": quote,
-                "quote": quote,
-                "chunk_id": chunk_id,
-                "page": chunk.page_start if chunk else None,
-                "clause": (clause_from_text(quote) if quote else None) or (chunk.clause if chunk else None),
-                "section": chunk.section if chunk else None,
-                "filename": chunk.filename if chunk else None,
-            }
+        for item in payload.get("requirements") or []:
+            if not isinstance(item, dict):
+                continue
+            quote = str(item.get("quote") or "").strip()
+            chunk = _chunk_for_quote(ctx, str(item.get("chunk_id") or ""), quote)
+            if chunk is None:
+                continue
+            key = " ".join(quote.lower().split())[:220]
+            if key in seen:
+                continue
+            seen.add(key)
+            rows.append(
+                {
+                    "kind": item.get("kind") or "eligibility",
+                    "text": quote,
+                    "quote": quote,
+                    "chunk_id": chunk.id,
+                    "page": chunk.page_start,
+                    "clause": clause_from_text(quote) or chunk.clause,
+                    "section": chunk.section,
+                    "filename": chunk.filename,
+                }
+            )
+    if rows:
+        return rows, f"llm_batches:{max(1, (len(chunks) + LLM_BATCH_SIZE - 1) // LLM_BATCH_SIZE)}"
+    if ctx.allow_heuristic_fallback:
+        return extract_requirements(chunks, policy), f"llm_empty_fallback_heuristic:errors={errors}"
+    return [], f"llm_empty:errors={errors}"
+
+
+def _chunk_for_quote(ctx: RunContext, chunk_id: str, quote: str) -> Chunk | None:
+    if len(" ".join(quote.split())) < 20:
+        return None
+    preferred = ctx.tender_index.chunks.get(chunk_id)
+    if preferred is not None and quote_supported(quote, preferred.text):
+        return preferred
+    for chunk in ctx.tender_index.order:
+        if quote_supported(quote, chunk.text):
+            return chunk
+    return None
+
+
+def _llm_decisions(ctx: RunContext, requirements: list[dict], feedback: str, cost: int | None) -> tuple[list[dict], str]:
+    """Ask the model for several eligibility decisions at once. Citations that are not spans are dropped."""
+    rows: list[dict] = []
+    source = "llm"
+    batch = 4
+    for start in range(0, len(requirements), batch):
+        group = requirements[start : start + batch]
+        evidence: dict[str, list[Chunk]] = {}
+        blocks = []
+        for index, requirement in enumerate(group, start=1):
+            hits = ctx.company_index.search(requirement.get("text") or "", k=4, mode="hybrid_rerank")
+            evidence[requirement.get("chunk_id") or str(index)] = hits
+            blocks.append(
+                f"REQUIREMENT {index} id={requirement.get('chunk_id') or index}\n"
+                f"{requirement.get('text')}\n"
+                f"Tender quote chunk_id={requirement.get('chunk_id')} page={requirement.get('page')}\n"
+                f"{requirement.get('quote')}\n"
+                f"Company evidence:\n{_format_chunks(hits, limit=4)}"
+            )
+        user = (
+            "Decide each requirement. Return JSON "
+            '{"decisions":[{"id":"...","decision":"met|not_met|missing|unclear",'
+            '"obligation":"qualification|submission","evidence_quote":"","evidence_chunk_id":"","rationale":"..."}]}\n\n'
+            + "\n\n".join(blocks)
         )
-    if not rows:
-        return extract_requirements(chunks, policy), "llm_empty_fallback_heuristic"
-    return rows[:40], "llm"
+        if feedback:
+            user += "\n\nVerifier feedback: " + feedback
+        try:
+            payload = ctx.llm.complete_json(system=ELIGIBILITY_SYSTEM, user=user)
+        except Exception as exc:
+            if ctx.allow_heuristic_fallback:
+                for requirement in group:
+                    hits = evidence.get(requirement.get("chunk_id") or "", [])
+                    rows.append(decide(requirement, hits, estimated_cost_inr=cost))
+                source = f"fallback:{type(exc).__name__}"
+                continue
+            for requirement in group:
+                row = decide(requirement, [], estimated_cost_inr=cost)
+                row["decision"] = "unclear"
+                row["rationale"] = f"The model call failed ({type(exc).__name__}). No rule fallback was applied."
+                row["evidence_quote"] = None
+                row["evidence_chunk_id"] = None
+                rows.append(row)
+            source = "llm_error"
+            continue
+        if "decisions" not in payload and "decision" in payload:
+            payload = {"decisions": [payload]}
+        by_id = {}
+        for item in payload.get("decisions") or []:
+            if isinstance(item, dict):
+                by_id[str(item.get("id") or "")] = item
+        for index, requirement in enumerate(group, start=1):
+            item = by_id.get(str(requirement.get("chunk_id") or index)) or by_id.get(str(index)) or {}
+            hits = ctx.company_index.search(requirement.get("text") or "", k=4, mode="hybrid_rerank")
+            row = decide(requirement, hits, estimated_cost_inr=cost)
+            decision = str(item.get("decision") or "unclear")
+            if decision not in {"met", "not_met", "missing", "unclear"}:
+                decision = "unclear"
+            quote = str(item.get("evidence_quote") or "").strip()
+            evidence_id = str(item.get("evidence_chunk_id") or "")
+            evidence_chunk = ctx.company_index.chunks.get(evidence_id) or ctx.tender_index.chunks.get(evidence_id)
+            if evidence_chunk is None or not quote_supported(quote, evidence_chunk.text):
+                evidence_chunk = None
+                for hit in hits:
+                    if quote_supported(quote, hit.text):
+                        evidence_chunk = hit
+                        break
+            if evidence_chunk is not None and quote:
+                row.update(
+                    {
+                        "decision": decision,
+                        "obligation": item.get("obligation") or row["obligation"],
+                        "rationale": str(item.get("rationale") or row["rationale"]),
+                        "evidence_quote": quote,
+                        "evidence_chunk_id": evidence_chunk.id,
+                        "evidence_filename": evidence_chunk.filename,
+                        "evidence_page": evidence_chunk.page_start,
+                        "evidence_clause": evidence_chunk.clause,
+                    }
+                )
+            elif decision in {"missing", "unclear"}:
+                row["decision"] = decision
+                row["obligation"] = item.get("obligation") or row["obligation"]
+                row["rationale"] = str(item.get("rationale") or row["rationale"])
+                row["evidence_quote"] = None
+                row["evidence_chunk_id"] = None
+            else:
+                # A met/not_met claim without a real evidence span is not kept as a citation.
+                row["decision"] = "unclear"
+                row["rationale"] = "The model gave a decision without a quote that appears in the evidence chunk."
+                row["evidence_quote"] = None
+                row["evidence_chunk_id"] = None
+            rows.append(row)
+    return rows, source
 
 
 def _llm_decision(ctx: RunContext, requirement: dict, hits: list[Chunk], feedback: str, cost: int | None) -> tuple[dict, str]:
@@ -361,7 +532,7 @@ def _map_llm_span(ctx: RunContext, item: dict) -> dict | None:
     chunk_id = str(item.get("chunk_id") or "")
     chunk = ctx.tender_index.chunks.get(chunk_id)
     quote = str(item.get("quote") or "").strip()
-    if not quote or chunk is None:
+    if not quote or chunk is None or not quote_supported(quote, chunk.text):
         return None
     return {
         "quote": quote,

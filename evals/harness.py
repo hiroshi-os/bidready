@@ -160,6 +160,7 @@ def run_cases(settings: Settings, tender_ids: list[str] | None = None) -> dict:
     try:
         for tender in selected:
             path = folder / tender["filename"]
+            print(f"case {tender['id']}", flush=True)
             started = time.perf_counter()
             case_id = analyse(
                 settings,
@@ -175,6 +176,13 @@ def run_cases(settings: Settings, tender_ids: list[str] | None = None) -> dict:
             supported, total = _faithfulness(session, case_id, report)
             faithfulness_supported += supported
             faithfulness_claims += total
+            extraction = _score_extraction(
+                tender,
+                [
+                    {"text": row.get("text") or "", "quote": row.get("tender_quote") or ""}
+                    for row in (report.get("matrix") or [])
+                ],
+            )
             runs.append(
                 {
                     "tender_id": tender["id"],
@@ -194,6 +202,8 @@ def run_cases(settings: Settings, tender_ids: list[str] | None = None) -> dict:
                     "prompt_tokens": run.prompt_tokens,
                     "completion_tokens": run.completion_tokens,
                     "faithfulness": {"supported": supported, "claims": total},
+                    "extraction": extraction,
+                    "claims": _claim_pairs(report),
                     "matrix_preview": [
                         {
                             "decision": row.get("decision"),
@@ -206,12 +216,28 @@ def run_cases(settings: Settings, tender_ids: list[str] | None = None) -> dict:
                     ],
                 }
             )
+            print(
+                f"case {tender['id']} done {wall:.1f}s tokens {run.prompt_tokens}/{run.completion_tokens} "
+                f"reqs {len(report.get('matrix') or [])}",
+                flush=True,
+            )
+            import gc
+
+            gc.collect()
     finally:
         session.close()
     rate = (faithfulness_supported / faithfulness_claims) if faithfulness_claims else None
+    extraction_rows = [row["extraction"] for row in runs]
+    exhaustive_rows = [
+        row["extraction"]
+        for row, tender in zip(runs, selected, strict=False)
+        if tender.get("exhaustive")
+    ]
     return {
         "profile": "sample-civil",
         "profile_note": "Synthetic company. Not a real bidder.",
+        "extraction": _micro(extraction_rows),
+        "extraction_exhaustive": _micro(exhaustive_rows) if exhaustive_rows else None,
         "runs": runs,
         "faithfulness": {
             "supported": faithfulness_supported,
@@ -433,6 +459,189 @@ def _span_for(chunks, phrases: list[str]):
                     return window, chunk
         return chunk.text, chunk
     return None, None
+
+
+def _claim_pairs(report: dict) -> list[dict]:
+    """Pairs for semantic support: does the cited span entail the claim?"""
+    pairs = []
+    for row in report.get("matrix") or []:
+        tender_quote = row.get("tender_quote") or ""
+        text = row.get("text") or ""
+        if tender_quote and text:
+            pairs.append(
+                {
+                    "kind": "tender_requirement",
+                    "premise": tender_quote,
+                    "hypothesis": text,
+                    "identical": _norm_eq(tender_quote, text),
+                }
+            )
+        if row.get("evidence_quote") and row.get("rationale"):
+            pairs.append(
+                {
+                    "kind": "evidence_decision",
+                    "premise": row["evidence_quote"],
+                    "hypothesis": row["rationale"],
+                    "decision": row.get("decision"),
+                    "identical": _norm_eq(row["evidence_quote"], row["rationale"]),
+                }
+            )
+    for item in report.get("risks") or []:
+        if item.get("quote"):
+            pairs.append(
+                {
+                    "kind": "risk",
+                    "premise": item["quote"],
+                    "hypothesis": f"This tender sentence states a contractual risk or penalty ({item.get('severity') or 'unspecified'}).",
+                    "identical": False,
+                }
+            )
+    for item in report.get("deadlines") or []:
+        if item.get("quote"):
+            pairs.append(
+                {
+                    "kind": "deadline",
+                    "premise": item["quote"],
+                    "hypothesis": f"This tender sentence states the date or time of the {item.get('event') or 'event'}.",
+                    "identical": False,
+                }
+            )
+    return pairs
+
+
+def _norm_eq(left: str, right: str) -> bool:
+    return " ".join((left or "").split()).lower() == " ".join((right or "").split()).lower()
+
+
+def score_nli(cases: dict, model_name: str = "cross-encoder/nli-MiniLM2-L6-H768") -> dict:
+    """Entailment of each claim by its cited span. Label order is contradiction, entailment, neutral."""
+    import numpy as np
+    from sentence_transformers import CrossEncoder
+
+    model = CrossEncoder(model_name)
+    labelled = []
+    for run in cases.get("runs") or []:
+        for pair in run.get("claims") or []:
+            labelled.append({**pair, "tender_id": run.get("tender_id")})
+    if not labelled:
+        return {"model": model_name, "n": 0, "supported": 0, "rate": None, "by_kind": {}}
+    scores = np.asarray(
+        model.predict([(pair["premise"][:1200], pair["hypothesis"][:400]) for pair in labelled]),
+        dtype=np.float32,
+    )
+    names = ["contradiction", "entailment", "neutral"]
+    counts = {name: 0 for name in names}
+    by_kind: dict[str, dict] = {}
+    sample = []
+    for pair, row in zip(labelled, scores, strict=True):
+        label = names[int(row.argmax())]
+        counts[label] += 1
+        kind = pair["kind"]
+        bucket = by_kind.setdefault(kind, {"n": 0, "entailment": 0, "identical": 0})
+        bucket["n"] += 1
+        if label == "entailment":
+            bucket["entailment"] += 1
+        if pair.get("identical"):
+            bucket["identical"] += 1
+        if len(sample) < 16:
+            sample.append(
+                {
+                    "kind": kind,
+                    "label": label,
+                    "identical": pair.get("identical"),
+                    "premise": pair["premise"][:500],
+                    "hypothesis": pair["hypothesis"][:500],
+                    "decision": pair.get("decision"),
+                }
+            )
+    n = len(labelled)
+    del model
+    import gc
+
+    gc.collect()
+    return {
+        "model": model_name,
+        "n": n,
+        "entailment": counts["entailment"],
+        "contradiction": counts["contradiction"],
+        "neutral": counts["neutral"],
+        "rate": counts["entailment"] / n if n else None,
+        "by_kind": by_kind,
+        "sample": sample,
+        "rule": "argmax over contradiction, entailment, neutral. Supported means entailment.",
+    }
+
+
+def llm_eligibility(llm, embedder, reranker, tender_ids: list[str] | None = None) -> dict:
+    """Gold eligibility judged by the LLM, with no rule fallback."""
+    from bidready.graph import RunContext, _llm_decisions
+
+    manifest = load_manifest()
+    folder = pdf_dir(manifest)
+    company = _company_indexes(embedder, reranker)
+    rows = []
+    selected = manifest["tenders"]
+    if tender_ids:
+        wanted = set(tender_ids)
+        selected = [tender for tender in selected if tender["id"] in wanted]
+    for tender in selected:
+        _, chunks, index = index_tender(folder / tender["filename"], embedder, reranker)
+        by_id = {item["id"]: item for item in tender.get("requirements") or []}
+        for label in tender.get("eligibility") or []:
+            requirement = by_id[label["requirement_id"]]
+            span, chunk = _span_for(chunks, requirement["match_all"])
+            if span is None:
+                rows.append(
+                    {
+                        "tender_id": tender["id"],
+                        "requirement_id": requirement["id"],
+                        "profile": label["profile"],
+                        "expected": label["expected"],
+                        "predicted": "error",
+                        "correct": False,
+                    }
+                )
+                continue
+            ctx = RunContext(
+                llm=llm,
+                tender_index=index,
+                company_index=company[label["profile"]],
+                allow_heuristic_fallback=False,
+            )
+            # A one-row batch uses the same decision code as the pipeline.
+            decided, source = _llm_decisions(
+                ctx,
+                [
+                    {
+                        "kind": requirement["kind"],
+                        "text": span,
+                        "quote": span,
+                        "chunk_id": chunk.id,
+                        "page": chunk.page_start,
+                        "clause": chunk.clause,
+                        "filename": chunk.filename,
+                    }
+                ],
+                "",
+                None,
+            )
+            predicted = decided[0]["decision"] if decided else "error"
+            rows.append(
+                {
+                    "tender_id": tender["id"],
+                    "requirement_id": requirement["id"],
+                    "profile": label["profile"],
+                    "expected": label["expected"],
+                    "predicted": predicted,
+                    "correct": predicted == label["expected"],
+                    "source": source,
+                    "rationale": (decided[0].get("rationale") if decided else "")[:300],
+                }
+            )
+            del ctx
+    summary = _eligibility_summary(rows)
+    summary["judge"] = "llm"
+    return summary
 
 
 def _faithfulness(session, case_id: str, report: dict) -> tuple[int, int]:

@@ -1,0 +1,32 @@
+Docker Compose attempt, 2026-09-26, Linux 6.12.94+ x86_64, 4 CPUs, 15.64 GiB RAM.
+
+Packages installed with apt:
+  docker.io 29.1.3-0ubuntu3~24.04.2
+  docker-compose-v2 2.40.3+ds1-0ubuntu1~24.04.1
+systemd was not running, so dockerd was started by hand.
+
+Attempt 1. dockerd default storage (overlayfs, containerd snapshotter).
+`docker compose up --build` failed while extracting the Postgres image:
+
+  failed to extract layer (... sha256:106e7e3cf19ab1b8c141723dbf4ceca4741f5cb5083f64a173a3be202ad85f6c)
+  to overlayfs: failed to convert whiteout file "etc/alternatives/.wh.pager.1.gz":
+  operation not permitted
+
+Attempt 2. `dockerd --storage-driver=vfs`.
+The daemon logged: Deleting nftables IPv4 rules, error="exit status 1"
+(and the same for IPv6).
+
+`docker compose up --build` built the app image and started both containers.
+Postgres 16.15 reported "database system is ready to accept connections" and the
+container health check was healthy. The host could open 127.0.0.1:5432.
+
+The app container (uvicorn on port 8000) exited 1:
+
+  sqlalchemy.exc.OperationalError: (psycopg.errors.ConnectionTimeout) connection timeout expired
+
+A second container on network workspace_default also timed out:
+
+  socket.create_connection(("db", 5432), 8) -> TimeoutError
+
+The app did not serve http://127.0.0.1:8000/health.
+Containers were stopped with `docker compose down` after this record.

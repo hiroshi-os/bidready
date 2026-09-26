@@ -108,6 +108,7 @@ RISK_SYSTEM = """You list risks and deadlines from tender chunks.
 Every item needs a verbatim quote and the chunk_id it came from.
 Deadlines are dates for bid submission, pre-bid meetings, opening, or EMD.
 Risks are penalties, forfeiture, liquidated damages, and EMD exposure.
+Return at most 4 risks and 4 deadlines. Keep each quote under 300 characters.
 Return JSON: {"risks": [{"quote": "...", "chunk_id": "...", "severity": "high|medium"}],
 "deadlines": [{"quote": "...", "chunk_id": "...", "event": "..."}]}
 """
