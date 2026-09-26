@@ -34,18 +34,19 @@ class _ChatLLM:
     prompt_tokens = 0
     completion_tokens = 0
 
-    def complete_json(self, *, system: str, user: str) -> dict:
-        text = self._chat(system=system, user=user)
+    def complete_json(self, *, system: str, user: str, schema: dict | None = None) -> dict:
+        text = self._chat(system=system, user=user, schema=schema)
         try:
             return _parse_json(text)
         except json.JSONDecodeError:
             text = self._chat(
                 system=system,
                 user=user + "\n\nYour previous reply was not JSON. Return only one JSON object.",
+                schema=schema,
             )
             return _parse_json(text)
 
-    def _chat(self, *, system: str, user: str) -> str:
+    def _chat(self, *, system: str, user: str, schema: dict | None = None) -> str:
         raise NotImplementedError
 
 
@@ -59,7 +60,8 @@ class OpenAICompatibleLLM(_ChatLLM):
         self._api_key = api_key
         self._base_url = base_url.rstrip("/")
 
-    def _chat(self, *, system: str, user: str) -> str:
+    def _chat(self, *, system: str, user: str, schema: dict | None = None) -> str:
+        del schema  # The OpenAI path keeps response_format json_object.
         response = httpx.post(
             f"{self._base_url}/chat/completions",
             headers={"Authorization": f"Bearer {self._api_key}"},
@@ -91,20 +93,27 @@ class OllamaLLM(_ChatLLM):
         self.model = model
         self._base_url = base_url.rstrip("/")
 
-    def _chat(self, *, system: str, user: str) -> str:
-        response = httpx.post(
+    def _post_chat(self, *, system: str, user: str, schema: dict | None) -> httpx.Response:
+        return httpx.post(
             f"{self._base_url}/api/chat",
             json={
                 "model": self.model,
                 "stream": False,
-                "format": "json",
+                "format": schema or "json",
+                "keep_alive": "30m",
+                "options": {"temperature": 0, "num_predict": 700, "num_ctx": 4096},
                 "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": user},
                 ],
             },
-            timeout=180,
+            timeout=300,
         )
+
+    def _chat(self, *, system: str, user: str, schema: dict | None = None) -> str:
+        response = self._post_chat(system=system, user=user, schema=schema)
+        if schema is not None and response.status_code >= 400:
+            response = self._post_chat(system=system, user=user, schema=None)
         response.raise_for_status()
         payload = response.json()
         # Ollama reports token counts on the response when eval_count is present.
@@ -142,9 +151,37 @@ def _parse_json(text: str) -> dict:
         parsed = json.loads(text)
     except json.JSONDecodeError:
         match = re.search(r"\{.*\}", text, re.DOTALL)
-        if not match:
-            raise
-        parsed = json.loads(match.group(0))
+        if match:
+            try:
+                parsed = json.loads(match.group(0))
+            except json.JSONDecodeError:
+                parsed = _repair_json(text)
+        else:
+            parsed = _repair_json(text)
     if not isinstance(parsed, dict):
         raise json.JSONDecodeError("expected an object", text, 0)
     return parsed
+
+
+def _repair_json(text: str) -> dict:
+    """Close a JSON object that the model truncated at num_predict."""
+    start = text.find("{")
+    if start < 0:
+        raise json.JSONDecodeError("no object", text, 0)
+    snippet = text[start:]
+    for end in range(len(snippet), 0, -1):
+        if snippet[end - 1] not in "}]":
+            continue
+        candidate = snippet[:end]
+        open_brace = candidate.count("{") - candidate.count("}")
+        open_bracket = candidate.count("[") - candidate.count("]")
+        if open_brace < 0 or open_bracket < 0:
+            continue
+        candidate = candidate + ("]" * open_bracket) + ("}" * open_brace)
+        try:
+            parsed = json.loads(candidate)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+    raise json.JSONDecodeError("unrepairable", text, 0)

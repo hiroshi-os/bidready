@@ -1,0 +1,1748 @@
+{
+  "environment": {
+    "measured_on": "2026-09-25",
+    "python": "3.12.3",
+    "platform": "Linux-6.12.94+-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "processor": "x86_64",
+    "cpu_count": 4,
+    "mem_total_gb": 15.64
+  },
+  "llm_prompt_comparison": {
+    "status": "not_measured",
+    "reason": "No LLM sample was scored. OPENAI_API_KEY is unset and Ollama did not respond at http://127.0.0.1:11434. The prompt-policy table is the deterministic v1/v2 cue ablation, not a sampled model comparison.",
+    "openai_key_set": false,
+    "ollama_reachable": false
+  },
+  "embedding_provider": "hash",
+  "embedding_model": "feature-hash-384",
+  "reranker": "lexical-trigram-jaccard",
+  "retrieval": {
+    "vector": {
+      "queries": 28,
+      "recall@5": 0.5357142857142857,
+      "recall@10": 0.6071428571428571,
+      "mrr": 0.5188492063492064
+    },
+    "hybrid": {
+      "queries": 28,
+      "recall@5": 0.6797619047619047,
+      "recall@10": 0.8833333333333334,
+      "mrr": 0.6849489795918366
+    },
+    "hybrid_rerank": {
+      "queries": 28,
+      "recall@5": 0.6083333333333334,
+      "recall@10": 0.8535714285714285,
+      "mrr": 0.5251417233560091
+    }
+  },
+  "extraction": {
+    "gold": 33,
+    "predicted": 549,
+    "matched": 33,
+    "precision": 0.060109289617486336,
+    "recall": 1.0,
+    "f1": 0.11340206185567009
+  },
+  "prompt_policy": {
+    "v1": {
+      "gold": 33,
+      "predicted": 549,
+      "matched": 33,
+      "precision": 0.060109289617486336,
+      "recall": 1.0,
+      "f1": 0.11340206185567009
+    },
+    "v2": {
+      "gold": 33,
+      "predicted": 191,
+      "matched": 30,
+      "precision": 0.15706806282722513,
+      "recall": 0.9090909090909091,
+      "f1": 0.2678571428571429
+    }
+  },
+  "eligibility": {
+    "n": 39,
+    "correct": 39,
+    "accuracy": 1.0,
+    "confusion": {
+      "not_met->not_met": 7,
+      "missing->missing": 10,
+      "met->met": 19,
+      "unclear->unclear": 3
+    },
+    "rows": [
+      {
+        "tender_id": "barc-ced-2026",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "not_met",
+        "predicted": "not_met",
+        "correct": true
+      },
+      {
+        "tender_id": "barc-ced-2026",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "not_met",
+        "predicted": "not_met",
+        "correct": true
+      },
+      {
+        "tender_id": "barc-ced-2026",
+        "requirement_id": "solvency",
+        "profile": "sample-civil",
+        "expected": "not_met",
+        "predicted": "not_met",
+        "correct": true
+      },
+      {
+        "tender_id": "barc-ced-2026",
+        "requirement_id": "solvency",
+        "profile": "sample-security",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "barc-ced-2026",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "barc-ced-2026",
+        "requirement_id": "gst",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "cci-forensic-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "cci-forensic-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "not_met",
+        "predicted": "not_met",
+        "correct": true
+      },
+      {
+        "tender_id": "cci-forensic-2024",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "cci-forensic-2024",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "cci-forensic-2024",
+        "requirement_id": "gst",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "epi-1366",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "epi-1366",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "unclear",
+        "predicted": "unclear",
+        "correct": true
+      },
+      {
+        "tender_id": "epi-1367",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "requirement_id": "gst",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "iiml-website",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "iiml-website",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "iiml-website",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "iimtrichy-stp-2024",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "iimtrichy-stp-2024",
+        "requirement_id": "blacklist",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "iimtrichy-stp-2024",
+        "requirement_id": "blacklist",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "iimtrichy-stp-2024",
+        "requirement_id": "gst",
+        "profile": "sample-security",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "iimtrichy-stp-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "unclear",
+        "predicted": "unclear",
+        "correct": true
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "not_met",
+        "predicted": "not_met",
+        "correct": true
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "sggscc-civil-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "sggscc-civil-2024",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "not_met",
+        "predicted": "not_met",
+        "correct": true
+      },
+      {
+        "tender_id": "sggscc-civil-2024",
+        "requirement_id": "solvency",
+        "profile": "sample-civil",
+        "expected": "not_met",
+        "predicted": "not_met",
+        "correct": true
+      },
+      {
+        "tender_id": "sggscc-civil-2024",
+        "requirement_id": "solvency",
+        "profile": "sample-security",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "sggscc-civil-2024",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "nhm-dnh-2025",
+        "requirement_id": "emd",
+        "profile": "sample-civil",
+        "expected": "missing",
+        "predicted": "missing",
+        "correct": true
+      },
+      {
+        "tender_id": "nhm-dnh-2025",
+        "requirement_id": "gst",
+        "profile": "sample-civil",
+        "expected": "met",
+        "predicted": "met",
+        "correct": true
+      },
+      {
+        "tender_id": "nhm-dnh-2025",
+        "requirement_id": "turnover",
+        "profile": "sample-security",
+        "expected": "unclear",
+        "predicted": "unclear",
+        "correct": true
+      }
+    ],
+    "profiles": "synthetic"
+  },
+  "tenders": [
+    {
+      "id": "barc-ced-2026",
+      "pages": 17,
+      "ocr_pages": 0,
+      "chunks": 67,
+      "extracted_v1": 67,
+      "extracted_v2": 34
+    },
+    {
+      "id": "cci-forensic-2024",
+      "pages": 34,
+      "ocr_pages": 0,
+      "chunks": 119,
+      "extracted_v1": 38,
+      "extracted_v2": 12
+    },
+    {
+      "id": "epi-1366",
+      "pages": 40,
+      "ocr_pages": 0,
+      "chunks": 174,
+      "extracted_v1": 100,
+      "extracted_v2": 31
+    },
+    {
+      "id": "epi-1367",
+      "pages": 39,
+      "ocr_pages": 0,
+      "chunks": 165,
+      "extracted_v1": 95,
+      "extracted_v2": 29
+    },
+    {
+      "id": "igidr-travel-2024",
+      "pages": 15,
+      "ocr_pages": 0,
+      "chunks": 48,
+      "extracted_v1": 31,
+      "extracted_v2": 14
+    },
+    {
+      "id": "iiml-website",
+      "pages": 17,
+      "ocr_pages": 0,
+      "chunks": 70,
+      "extracted_v1": 55,
+      "extracted_v2": 22
+    },
+    {
+      "id": "iimtrichy-stp-2024",
+      "pages": 24,
+      "ocr_pages": 0,
+      "chunks": 90,
+      "extracted_v1": 41,
+      "extracted_v2": 9
+    },
+    {
+      "id": "iitpkd-ambulance-2024",
+      "pages": 13,
+      "ocr_pages": 0,
+      "chunks": 83,
+      "extracted_v1": 19,
+      "extracted_v2": 9
+    },
+    {
+      "id": "sggscc-civil-2024",
+      "pages": 50,
+      "ocr_pages": 8,
+      "chunks": 237,
+      "extracted_v1": 33,
+      "extracted_v2": 13
+    },
+    {
+      "id": "nhm-dnh-2025",
+      "pages": 25,
+      "ocr_pages": 0,
+      "chunks": 79,
+      "extracted_v1": 70,
+      "extracted_v2": 18
+    }
+  ],
+  "prompt_text_sha256": {
+    "v1": "20b6de85dd7e",
+    "v2": "2b80157d0c34"
+  },
+  "cue_counts": {
+    "v1": 35,
+    "v2": 20
+  },
+  "cases": {
+    "profile": "sample-civil",
+    "profile_note": "Synthetic company. Not a real bidder.",
+    "runs": [
+      {
+        "tender_id": "barc-ced-2026",
+        "case_id": "0a815ced02594b21892f40e4a482a4c2",
+        "status": "succeeded",
+        "go_no_go": "NO-GO",
+        "summary": "NO-GO. 18 supported, 2 contradicted, 22 missing and 25 unclear out of 67 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 67,
+        "decisions": {
+          "met": 18,
+          "not_met": 2,
+          "missing": 22,
+          "unclear": 25
+        },
+        "risks": 24,
+        "deadlines": 3,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding BARC Civil Engineering Division e-tender BARC/CED/ET/42/2026-2027\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 2, page 2 (barc-ced-2026.pdf).\n   Tender text: \"(a) Bank Solvency Certificate of a Nationalized Bank / Scheduled Bank for a minimum of \u20b950.12 Lakhs and should not be older than one year from the date of opening of tender.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n2. Clause 2, page 2 (barc-ced-2026.pdf).\n   Tender text: \"(b) Average Annual Financial Turnover of the bidder should be at least \u20b9125.29 Lakhs during the immediate last 3 consecutive audited financial years ending 31st March 2025.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n3. Clause 2, page 2 (barc-ced-2026.pdf).\n   Tender text: \"Bidders who are not able to submit undertaking either as \u2018Class-I local supplier\u2019 or as \u2018Class-II local supplier\u2019 shall not be allowed to participate in this tender.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n4. Clause 2, page 2 (barc-ced-2026.pdf).\n   Tender text: \"Unless clarified through pre- bid clarification uploaded by tender inviting authority, a bidder shall be eligible to participate in this tender work if they are able to submit an undertaking indicating they are \u2018Class-I local supplier\u2019.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n5. Clause 2, page 2 (barc-ced-2026.pdf).\n   Tender text: \"ii) Public Procurement (Preference to Make in India), Order 2017 shall be referred for definition of \u2018Class-I local supplier\u2019, \u2018Class-II local supplier\u2019 and \u2018Non local suppliers\u2019.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 2, page 2 (barc-ced-2026.pdf).\n   Tender text: \"Also bidder must submit undertaking along with the bid declaring local content in % offered by them in subject tender (Refer Annexure \u2013 4).\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n7. Clause 1, page 1 (barc-ced-2026.pdf).\n   Tender text: \"website on https://eprocure.gov.in/eprocure/app Detailed NIT is also available on website www.barc.gov.in for  view only xii) Seek clarification Start Date :  21/09/2026 (11:00 Hrs) xiii) Seek clarification End Date :  28/09/2026 (11:00 Hrs) xiv) Site Visit Date & Time :\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\n8. Clause 1, page 1 (barc-ced-2026.pdf).\n   Tender text: \"xvii) Bid Submission Start Date : 01/10/2026 (11:00 Hrs) xviii) Bid Submission End Date : 15/10/2026 (15:00 Hrs)\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 8 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 49,
+            "detail": "67 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 46,
+            "detail": "67 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 6,
+            "detail": "24 risks, 3 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "8 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 0,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 0.2,
+        "latency_ms_recorded": 155,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 124,
+          "claims": 124
+        },
+        "matrix_preview": [
+          {
+            "decision": "met",
+            "kind": "technical",
+            "page": 3,
+            "clause": "3",
+            "text": "The bidder should have satisfactorily completed (based on certification of performance by client of the works) 3 (Three) similar works each of value not less than \u20b950.12 Lakhs or 2 (Two) similar works each of value not less than \u20b975.18 Lakh"
+          },
+          {
+            "decision": "unclear",
+            "kind": "document",
+            "page": 2,
+            "clause": "2",
+            "text": "Bidders who are not able to submit undertaking either as \u2018Class-I local supplier\u2019 or as \u2018Class-II local supplier\u2019 shall not be allowed to participate in this tender."
+          },
+          {
+            "decision": "unclear",
+            "kind": "document",
+            "page": 2,
+            "clause": "2",
+            "text": "Unless clarified through pre- bid clarification uploaded by tender inviting authority, a bidder shall be eligible to participate in this tender work if they are able to submit an undertaking indicating they are \u2018Class-I local supplier\u2019."
+          },
+          {
+            "decision": "unclear",
+            "kind": "eligibility",
+            "page": 2,
+            "clause": "2",
+            "text": "ii) Public Procurement (Preference to Make in India), Order 2017 shall be referred for definition of \u2018Class-I local supplier\u2019, \u2018Class-II local supplier\u2019 and \u2018Non local suppliers\u2019."
+          },
+          {
+            "decision": "met",
+            "kind": "financial",
+            "page": 1,
+            "clause": "1",
+            "text": "ii) Work Location(s)&Pin Code (s) : Purnima Complex, Nursery and for various Sea side Buildings, North site, BARC, Trombay, Mumbai.400085 iii) Work/Product Category : Works iv) Tender inviting Authority : Chief Engineer v) Inviting Officer "
+          },
+          {
+            "decision": "unclear",
+            "kind": "document",
+            "page": 2,
+            "clause": "2",
+            "text": "Also bidder must submit undertaking along with the bid declaring local content in % offered by them in subject tender (Refer Annexure \u2013 4)."
+          },
+          {
+            "decision": "unclear",
+            "kind": "eligibility",
+            "page": 2,
+            "clause": "2",
+            "text": "The bidders who find themselves as \u2018Class-II local supplier\u2019 can also participate provided they suggest for the same by seeking clarification with appropriate noting/ declaration from concerned Govt Department/ ministries and based on such "
+          },
+          {
+            "decision": "unclear",
+            "kind": "technical",
+            "page": 3,
+            "clause": "3",
+            "text": "(d) Performance Certificates of all completed similar works cited as experience of similar works."
+          }
+        ]
+      },
+      {
+        "tender_id": "cci-forensic-2024",
+        "case_id": "f9bb665564b44ed0bd286c4706be1e84",
+        "status": "succeeded",
+        "go_no_go": "CONDITIONAL",
+        "summary": "CONDITIONAL. 11 supported, 0 contradicted, 12 missing and 15 unclear out of 38 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 38,
+        "decisions": {
+          "met": 11,
+          "not_met": 0,
+          "missing": 12,
+          "unclear": 15
+        },
+        "risks": 13,
+        "deadlines": 0,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding Competition Commission of India empanelment of digital forensic service providers, NIT dated 24.10.2024\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 5, page 13 (cci-forensic-2024.pdf).\n   Tender text: \"The relaxations and concessions as per Government of India notifications/ instructions/guidelines issued from time to time and as adopted/allowed by CCI are allowed in respect of the bidder claiming to be MSME and/or MSME-SC/ST and/or Start Ups and/or Domestically Manufactured Producer under Make in India initiatives etc., subject to production of requisite documents/proofs etc.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n2. Clause 2, page 28 (cci-forensic-2024.pdf).\n   Tender text: \"Financial Year Annual Turnover {In Rs. (Crore)} Average Turnover {In Rs. (Crore)} Profit after Tax {In Rs. (Crore)} Net worth {In Rs. (Crore)} i 2020-21 ii 2021-22 iii 2022-23 iv 2023-24 Total (Please enclose copy of audited results /balance sheet in original duly attested and stamped as proof) It is certified that the information furnished above is true and correct.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n3. Clause 12, page 4 (cci-forensic-2024.pdf).\n   Tender text: \"iv) In respect of the above, the Service Provider shall deploy qualified Manpower & utilize the latest software and hardware tools.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n4. Clause 15, page 9 (cci-forensic-2024.pdf).\n   Tender text: \"(viii) The Service Provider shall ensure that adequate manpower is made available for forensic analysis.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n5. Clause 2, page 12 (cci-forensic-2024.pdf).\n   Tender text: \"Audited Balance Sheet and Profit & Loss A/c is to be submitted as documentary proof as per\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 5, page 13 (cci-forensic-2024.pdf).\n   Tender text: \"Bidder\u2019s claiming exemptions should enclose relevant certificates such as UAM for MSMEs.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 46 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 36,
+            "detail": "38 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 27,
+            "detail": "38 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 6,
+            "detail": "13 risks, 0 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "6 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 0,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 0.17,
+        "latency_ms_recorded": 149,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 70,
+          "claims": 70
+        },
+        "matrix_preview": [
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 13,
+            "clause": "3",
+            "text": "Bidder shall submit Earnest Money Deposit (EMD) of Rs. 50,000/- (Rs. Fifty thousand only) in form of a Demand Draft or Banker\u2019s Cheque in favour of \u201cCompetition Commission of India\u201d, payable at New Delhi, which should be valid for forty-fiv"
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 12,
+            "clause": "2",
+            "text": "Bidder should have PAN, TAN, GST, PF, ESI code allotted in its name."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 13,
+            "clause": "3",
+            "text": "The firms registered with National Small Industries Corporation (NSIC)/ Micro, Small and Medium Enterprises (MSME) are exempted from furnishing bid guarantee/EMD, cost of tender documents provided that: - (a) such small-scale units are regi"
+          },
+          {
+            "decision": "unclear",
+            "kind": "document",
+            "page": 13,
+            "clause": "5",
+            "text": "The relaxations and concessions as per Government of India notifications/ instructions/guidelines issued from time to time and as adopted/allowed by CCI are allowed in respect of the bidder claiming to be MSME and/or MSME-SC/ST and/or Start"
+          },
+          {
+            "decision": "unclear",
+            "kind": "financial",
+            "page": 28,
+            "clause": "2",
+            "text": "Financial Year Annual Turnover {In Rs. (Crore)} Average Turnover {In Rs. (Crore)} Profit after Tax {In Rs. (Crore)} Net worth {In Rs. (Crore)} i 2020-21 ii 2021-22 iii 2022-23 iv 2023-24 Total (Please enclose copy of audited results /balanc"
+          },
+          {
+            "decision": "unclear",
+            "kind": "technical",
+            "page": 4,
+            "clause": "12",
+            "text": "iv) In respect of the above, the Service Provider shall deploy qualified Manpower & utilize the latest software and hardware tools."
+          },
+          {
+            "decision": "met",
+            "kind": "eligibility",
+            "page": 5,
+            "clause": "13",
+            "text": "Further, Service provider may be blacklisted from providing any further service to CCI."
+          },
+          {
+            "decision": "unclear",
+            "kind": "technical",
+            "page": 9,
+            "clause": "15",
+            "text": "(viii) The Service Provider shall ensure that adequate manpower is made available for forensic analysis."
+          }
+        ]
+      },
+      {
+        "tender_id": "epi-1366",
+        "case_id": "6eb0844db3734ab3978b32b48310e79e",
+        "status": "succeeded",
+        "go_no_go": "NO-GO",
+        "summary": "NO-GO. 8 supported, 1 contradicted, 36 missing and 55 unclear out of 100 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 100,
+        "decisions": {
+          "met": 8,
+          "not_met": 1,
+          "missing": 36,
+          "unclear": 55
+        },
+        "risks": 24,
+        "deadlines": 2,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding EPI e-tender EPI/ER/CON/941/1366, PEB industrial shed at Anara\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 6.3, page 7 (epi-1366.pdf).\n   Tender text: \"Should have average annual financial turnover (audited) on works amounting at least 50% of the estimated cost put to tender (ECPT) during the last three consecutive financial years ending on 31.03.2024 duly certified by a Chartered Accountant along with Unique Document Identification Number (UDIN) issued by ICAI is to be submitted.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n2. Clause 7, page 9 (epi-1366.pdf).\n   Tender text: \"Page 9 of 40 In case of a Company/firm, formed after merger and/ or acquisition of other companies / firms, past work experience and financial parameters like turnover, profitability, net worth etc. of the merged / acquired companies / firms will be considered for qualification of such Company / firm provided such Company / firm continues to own the requisite assets and resources of the merged / acquired companies / firms.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n3. Clause 6.1, page 6 (epi-1366.pdf).\n   Tender text: \"Experience Requirement Experience of having successfully completed similar work during the last 07 (Seven) years ending last day of the   month previous to the one in which tender is Invited:\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n4. Clause 6.1, page 6 (epi-1366.pdf).\n   Tender text: \"Three similar works, each costing not less than the amount equal to 40% of estimated cost put to tender.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n5. Clause 6.1, page 7 (epi-1366.pdf).\n   Tender text: \"Page 7 of 40 Two similar works, each costing not less than the amount equal to 50% of estimated cost put to tender.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 6.1, page 7 (epi-1366.pdf).\n   Tender text: \"The \u201csimilar works\u201d shall mean \u201cConstruction of Pre-Engineered Buildings (PEB) shed for Railway works or in any type of Industrial plant\u201d In case the bidder has executed composite works which includes the qualifying works as per the definition of \u201csimilar work\u201d ,then the value of such qualifying work out of the total value of composite work shall be carried out for the purpose of qualification.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n7. Clause 3, page 5 (epi-1366.pdf).\n   Tender text: \"ii Last Date & Time of Submission of Pre-Bid queriers 19.03.2025 UPTO 11:00 A.M.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\n8. Clause 3, page 5 (epi-1366.pdf).\n   Tender text: \"iii Date of Pre-Bid Meeting (Through Video Conference) 19.03.2025 from 03:00 P.M iv Last Date & Time of Submission of online tender 26.03.2025 UPTO 03.00PM v) Date & Time of online opening of Tender (Technical Bid) 27.03.2025 at 03:00PM vi) Last date & Time of Submission of offline EMD 27.03.2025 UPTO 03.00PM All pre bid quires must be sent to the tender inviting authority as given in clause No 13.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 63 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 49,
+            "detail": "100 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 74,
+            "detail": "100 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 7,
+            "detail": "24 risks, 2 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "8 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 1,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 0.283,
+        "latency_ms_recorded": 257,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 148,
+          "claims": 148
+        },
+        "matrix_preview": [
+          {
+            "decision": "unclear",
+            "kind": "financial",
+            "page": 9,
+            "clause": "7",
+            "text": "Page 9 of 40 In case of a Company/firm, formed after merger and/ or acquisition of other companies / firms, past work experience and financial parameters like turnover, profitability, net worth etc. of the merged / acquired companies / firm"
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 17,
+            "clause": "14",
+            "text": "Self-attested 15 Copy of Permanent Account Number (PAN) and GST Registration Certificate."
+          },
+          {
+            "decision": "met",
+            "kind": "financial",
+            "page": 3,
+            "clause": "2",
+            "text": "Earnest Money Deposit Tender Fee (Rs.) Balance work for Construction of Industrial shed with Pre-Engineered Building (PEB) (including Structural Design & Drawings) in connection with development of infrastructure for integrated maintenance "
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 5,
+            "clause": "5",
+            "text": "In case the EMD/Bid security in original"
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 5,
+            "clause": "5",
+            "text": "The bid must be accompanied by scanned copy of Earnest Money Deposit (EMD) of Rs. 12,17,975/- (Rupees Twelve LakhsSeventeen Thousand Nine hundred Seventy Five only)."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 6,
+            "clause": "5",
+            "text": "EMD / Bid Security within the bid due date shall not be required."
+          },
+          {
+            "decision": "unclear",
+            "kind": "technical",
+            "page": 6,
+            "clause": "6.1",
+            "text": "Experience Requirement Experience of having successfully completed similar work during the last 07 (Seven) years ending last day of the month previous to the one in which tender is Invited:"
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 6,
+            "clause": "5",
+            "text": "However, transaction details / proof of submission of EMD / bid security through net banking shall be uploaded in designated place in Tendering Portal (Online)."
+          }
+        ]
+      },
+      {
+        "tender_id": "epi-1367",
+        "case_id": "31e1576b8bb7480890fbbbe0879eec5a",
+        "status": "succeeded",
+        "go_no_go": "NO-GO",
+        "summary": "NO-GO. 5 supported, 1 contradicted, 34 missing and 55 unclear out of 95 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 95,
+        "decisions": {
+          "met": 5,
+          "not_met": 1,
+          "missing": 34,
+          "unclear": 55
+        },
+        "risks": 24,
+        "deadlines": 2,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding EPI e-tender EPI/ER/CON/941/1367, mechanical works at Anara\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 6.3, page 6 (epi-1367.pdf).\n   Tender text: \"Should have average annual financial turnover (audited)  on works amounting at least 50% of the estimated cost put to tender (ECPT)  during the last three consecutive financial years ending on 31.03.2024 duly certified by a Chartered Accountant along with Unique Document Identification Number (UDIN) issued by ICAI is also to be submitted.\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n2. Clause 7, page 8 (epi-1367.pdf).\n   Tender text: \"Page 8 of 39 In case of a Company/firm, formed after merger and/ or acquisition of other companies / firms, past work experience and financial parameters like turnover, profitability, net worth etc. of the merged / acquired companies / firms will be considered for qualification of such Company / firm provided such Company / firm continues to own the requisite assets and resources of the merged / acquired companies / firms.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n3. Clause 6.1, page 5 (epi-1367.pdf).\n   Tender text: \"(a) Experience Requirement Experience of having successfully completed similar work during the last 07 (Seven) years ending last day of the   month previous to the one in which Tender is invited:\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n4. Clause 6.1, page 5 (epi-1367.pdf).\n   Tender text: \"Three similar works, each costing not less than the amount equal to 40% of estimated cost put to tender.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n5. Clause 6.1, page 6 (epi-1367.pdf).\n   Tender text: \"In case the Bidder has executed composite works which includes the Qualifying work(s) as per the definition of \u201csimilar works\u201d,then the value of such qualifying work(s) out of the total value of Composite Works shall be considered for the purpose of qualification.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 6.1, page 6 (epi-1367.pdf).\n   Tender text: \"Page 6 of 39 Two similar works, each costing not less than the amount equal to 50% of estimated cost put to tender.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n7. Clause 4, page 4 (epi-1367.pdf).\n   Tender text: \"ii Last Date & Time of Submission of Pre-Bid queriers 18.03.2025 UPTO 02:00 P.M.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\n8. Clause 4, page 4 (epi-1367.pdf).\n   Tender text: \"iii Date of Pre-Bid Meeting (Through Video Conference) 18.03.2025 from 03:00 P.M iv Last Date & Time of Submission of online tender 25.03.2025 UPTO 03.00PM v) Date & Time of online opening  of Tender (Technical Bid) 26.03.2025 at 03:00PM vi) Last date & Time of Submission of offline EMD 26.03.2024 UPTO 03.00PM All Pre-bid queries must be sent to the Tender inviting Authority as given in Clause No.13\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 58 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 47,
+            "detail": "95 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 69,
+            "detail": "95 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 7,
+            "detail": "24 risks, 2 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "8 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 1,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 0.272,
+        "latency_ms_recorded": 245,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 140,
+          "claims": 140
+        },
+        "matrix_preview": [
+          {
+            "decision": "unclear",
+            "kind": "financial",
+            "page": 8,
+            "clause": "7",
+            "text": "Page 8 of 39 In case of a Company/firm, formed after merger and/ or acquisition of other companies / firms, past work experience and financial parameters like turnover, profitability, net worth etc. of the merged / acquired companies / firm"
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 16,
+            "clause": "8.2",
+            "text": "Self-attested 15 Copy of Permanent Account Number (PAN) and GST Registration Certificate."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 4,
+            "clause": "4",
+            "text": "The bid must be accompanied by scanned copy of Earnest Money Deposit (EMD) of Rs. 5,05,000/- (Rupees five lakh five thousand only)."
+          },
+          {
+            "decision": "unclear",
+            "kind": "technical",
+            "page": 5,
+            "clause": "6.1",
+            "text": "(a) Experience Requirement Experience of having successfully completed similar work during the last 07 (Seven) years ending last day of the month previous to the one in which Tender is invited:"
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 5,
+            "clause": "5",
+            "text": "In case EMD/ Bid Security is submitted through net banking or any other mode of online transfer, transaction details /proof of submission through net banking shall have to be uploaded along with technical bid."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 5,
+            "clause": "5",
+            "text": "In case the EMD/Bid security in original physical form does not reach EPIL Inviting Authority within the above cutoff date bid shall be rejected and not considered."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 5,
+            "clause": "5",
+            "text": "Page 5 of 39 The Earnest Money Deposit (EMD) in the form of online payment or Demand Draft / Banker Cheque in favour of \u201cEngineering Projects (India) Ltd\u201d or Bank Guarantee as per the enclosed Format issued from any Nationalized Bank /Sched"
+          },
+          {
+            "decision": "unclear",
+            "kind": "technical",
+            "page": 5,
+            "clause": "6.1",
+            "text": "Three similar works, each costing not less than the amount equal to 40% of estimated cost put to tender."
+          }
+        ]
+      },
+      {
+        "tender_id": "igidr-travel-2024",
+        "case_id": "d3babd338be5457f8b9f64d93c7032cd",
+        "status": "succeeded",
+        "go_no_go": "CONDITIONAL",
+        "summary": "CONDITIONAL. 7 supported, 0 contradicted, 18 missing and 6 unclear out of 31 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 31,
+        "decisions": {
+          "met": 7,
+          "not_met": 0,
+          "missing": 18,
+          "unclear": 6
+        },
+        "risks": 24,
+        "deadlines": 0,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding IGIDR tender IGIDR/Tender/2024/ED/09 for a ticket booking agency\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 9, page 10 (igidr-travel-2024.pdf).\n   Tender text: \"A simple undertaking by the bidder for any of the stated criteria will not suffice for the purpose.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n2. Clause 9, page 10 (igidr-travel-2024.pdf).\n   Tender text: \"Bidders must submit documentary proof in support of meeting each of the above minimum qualification criteria.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n3. Clause 5, page 10 (igidr-travel-2024.pdf).\n   Tender text: \"The agency should have experience in providing ticket booking services (rail/air tickets) to two organizations, Central/State Government/Public Sector Undertaking/Autonomous Educational Institutes, in the last five years.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n4. Clause 5, page 10 (igidr-travel-2024.pdf).\n   Tender text: \"The bidder should submit the Profit & Loss account statements or CA certificate for the turnover amount of the above three financial years duly certified by CA.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n5. Clause 6, page 10 (igidr-travel-2024.pdf).\n   Tender text: \"\uf0b7 Pre-qualification documents to be submitted by the bidder along with the Pre-qualification Bid:\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 24, page 11 (igidr-travel-2024.pdf).\n   Tender text: \"24-hour helpline numbers 9 Turnover in the last three financial years FY 2020-21:\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 15 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 37,
+            "detail": "31 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 21,
+            "detail": "31 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 3,
+            "detail": "24 risks, 0 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "6 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 0,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 0.124,
+        "latency_ms_recorded": 106,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 70,
+          "claims": 70
+        },
+        "matrix_preview": [
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 3,
+            "clause": "5",
+            "text": "I/We have deposited NEFT/DD/FDR/BG of Rupees Twenty thousand only as an earnest money deposit or the valid MSME certificate for EMD exemption to the IGIDR, which will not bear any interest."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 2,
+            "clause": "3",
+            "text": "EMD and Pre-qualification Bid\" and \"Email-2: Financial bid\"."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 2,
+            "clause": "3",
+            "text": "The subject of the e-mail should be mentioned as \"Email-1: EMD and Pre-Qualification Bid for the Annual contract for the Engagement of Ticket Booking Agency for Travel Desk Services at IGIDR\" and \"Email-2: Financial bid for Engagement of Ti"
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 4,
+            "clause": "1",
+            "text": "1: EMD and Pre-qualification Bid\" and \"Email-2: Financial bid\"."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 4,
+            "clause": "1",
+            "text": "Bidders registered under MSME are exempted from submission of EMD but should submit a copy of the MSME certificate for exemption."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 4,
+            "clause": "5",
+            "text": "The E-mail bid with the subject \"EMD & Pre-qualification Bid for the Annual contract for the Engagement of Ticket Booking Agency for Travel Desk Services at IGIDR\" shall be opened by the tender opening committee on the next working day 10th"
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 5,
+            "clause": "15",
+            "text": "Earnest Money Deposit (EMD) may be converted into a Performance Security Deposit."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 8,
+            "clause": "8",
+            "text": "If the successful bidder submits an MSME certificate for the EMD exemption, then they should deposit an amount of Rs. 20,000.00 towards the PSD in the form of DD/FDR/BG."
+          }
+        ]
+      },
+      {
+        "tender_id": "iiml-website",
+        "case_id": "2599563cb6644b50b8aca38949589551",
+        "status": "succeeded",
+        "go_no_go": "NO-GO",
+        "summary": "NO-GO. 8 supported, 0 contradicted, 15 missing and 32 unclear out of 55 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 55,
+        "decisions": {
+          "met": 8,
+          "not_met": 0,
+          "missing": 15,
+          "unclear": 32
+        },
+        "risks": 22,
+        "deadlines": 1,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding IIM Lucknow annual maintenance contract for the institute website\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause \u2014, page 2 (iiml-website.pdf).\n   Tender text: \"\u2022 Bidders with relevant MSME Certificate are exempted from\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n2. Clause 9, page 4 (iiml-website.pdf).\n   Tender text: \"(Enclose List of Backend support technical manpower with their Qualification & Experience on companies letter head).\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n3. Clause 10, page 4 (iiml-website.pdf).\n   Tender text: \"10) Details of adequate facilities and manpower (Technical staff) to ensure the necessary  backend support (Minimum Five) to IIM Lucknow project during the AMC period.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n4. Clause 12, page 4 (iiml-website.pdf).\n   Tender text: \"12) Onsite Manpower must have minimum 3 year working experience in Website development & maintenance in both static and dyanamic modules .\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n5. Clause 13, page 4 (iiml-website.pdf).\n   Tender text: \"13) Minimum Salary of onsite manpower should be more than Central Government highly skilled workers wages.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 8, page 4 (iiml-website.pdf).\n   Tender text: \"8) The Bidder must have successfully completed at least 3 Security Audit of GIGW Website from CERT-IN Empaneled Vendor in the last five years (Enclose copy of Work Order along with Security Audit Certificate issued).\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n7. Clause \u2014, page 2 (iiml-website.pdf).\n   Tender text: \"Estimated Tender value for 3 years Rs.20,00,000/- Last date and time for submission of tender 30.09.2024 (4:00 pm) Date and time for Opening of Technical Bid 01.10.2024 (11:00 am) Date and time for Opening of Financial Bid Will be informed later to successful bidders through eProcure portal.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 14 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 46,
+            "detail": "55 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 39,
+            "detail": "55 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 5,
+            "detail": "22 risks, 1 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "7 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 0,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 0.18,
+        "latency_ms_recorded": 158,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 95,
+          "claims": 95
+        },
+        "matrix_preview": [
+          {
+            "decision": "met",
+            "kind": "financial",
+            "page": 14,
+            "clause": "07231450000294",
+            "text": "(Enclose copy of GST Registration & PAN card) b Submit Proof of Average Turnover of last three Financial Years (2021-22, 2022-23 & 2023-24) which should be more than 20 Lakhs."
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 4,
+            "clause": "6",
+            "text": "(Enclose copy of GST Registration & PAN card)"
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 2,
+            "clause": null,
+            "text": "Earnest Money Deposit (EMD) \u2022 Rs. 50,000/- (Rupees Fifty Thousand only) (Must be submitted along with bid."
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 4,
+            "clause": "1",
+            "text": "1) GST Registration No of the bidder/ firm along with the PAN number allotted by the concerned authorities."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 11,
+            "clause": "07231450000294",
+            "text": "NSIC /MSME registered firms are exempted from submission of EMD on uploading of valid MSME certificate."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 11,
+            "clause": "07231450000294",
+            "text": "Towards Earnest Money Deposit (EMD) to below mentioned bank account of Institute on or before the last date & time mentioned above."
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 14,
+            "clause": "07231450000294",
+            "text": "OR Attach Exemption Proof a GST Registration No of the bidder/ firm along with the PAN number allotted by the concerned authorities."
+          },
+          {
+            "decision": "met",
+            "kind": "technical",
+            "page": 17,
+            "clause": "2",
+            "text": "Item Description Amount excluding GST (Rs.) 1 Annual Maintenance Contract charges for three years of IIML existing website with one Onsite manpower as per Scope of work of tender document."
+          }
+        ]
+      },
+      {
+        "tender_id": "iimtrichy-stp-2024",
+        "case_id": "f29d01720e9845e7b00c222880b6e9b8",
+        "status": "succeeded",
+        "go_no_go": "CONDITIONAL",
+        "summary": "CONDITIONAL. 12 supported, 0 contradicted, 16 missing and 13 unclear out of 41 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 41,
+        "decisions": {
+          "met": 12,
+          "not_met": 0,
+          "missing": 16,
+          "unclear": 13
+        },
+        "risks": 18,
+        "deadlines": 6,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding IIM Tiruchirappalli NIT 24SP204T for STP plant materials and servicing, 14.10.2024\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 2024, page 5 (iimtrichy-stp-2024.pdf).\n   Tender text: \"At least one similar work of 80% of the estimated cost [Order copy to be enclosed] OR At least two similar works of 60% of the estimated cost each [Order copy to be enclosed] OR At least three similar works of 40% of the estimated cost each. [Order copy to be enclosed] e.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n2. Clause 1, page 5 (iimtrichy-stp-2024.pdf).\n   Tender text: \"An undertaking to this effect in the Company letterhead duly signed by the owner/partner or both to be enclosed, as per Annexure-III.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n3. Clause 2024, page 5 (iimtrichy-stp-2024.pdf).\n   Tender text: \"Bidder(s) should have at least three years\u2019 experience in Similar work as on September 30,\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n4. Clause 2024, page 5 (iimtrichy-stp-2024.pdf).\n   Tender text: \"Copies of duly audited Balance Sheets with Profit & Loss accounts are to be submitted as per Annexure-I (Technical Bid).\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n5. Clause 2024, page 5 (iimtrichy-stp-2024.pdf).\n   Tender text: \"Copy(ies) of work order(s) showing that the firm has executed similar work(s) in the last three years as on September 30, 2024.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 2024, page 5 (iimtrichy-stp-2024.pdf).\n   Tender text: \"Similar work shall mean: Erection and Maintenance of STP & WTP Plants and the details of current works on hand and other contractual commitments shall be provided by the bidder as on September 30, 2024 as detailed below:\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n7. Clause \u2014, page 1 (iimtrichy-stp-2024.pdf).\n   Tender text: \"onwards - Pre-bid Meeting 22.10.2024 11.00 Hrs.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\n8. Clause \u2014, page 1 (iimtrichy-stp-2024.pdf).\n   Tender text: \"Last date for Submission of Tenders 04.11.2024 17.30 Hrs.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 15 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 46,
+            "detail": "41 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 28,
+            "detail": "41 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 6,
+            "detail": "18 risks, 6 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "8 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 0,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 0.256,
+        "latency_ms_recorded": 170,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 87,
+          "claims": 87
+        },
+        "matrix_preview": [
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 1,
+            "clause": null,
+            "text": "The payment of EMD is exempted for MSME Bidders."
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 4,
+            "clause": "8",
+            "text": "A copy of the GST Registration Certificate, PAN, and Bank account details should be submitted along with the Technical Bid."
+          },
+          {
+            "decision": "unclear",
+            "kind": "technical",
+            "page": 5,
+            "clause": "2024",
+            "text": "At least one similar work of 80% of the estimated cost [Order copy to be enclosed] OR At least two similar works of 60% of the estimated cost each [Order copy to be enclosed] OR At least three similar works of 40% of the estimated cost each"
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 6,
+            "clause": "2",
+            "text": "Micro and Small Enterprises (MSEs) firms as defined in the MSE Procurement Policy issued by the Department of Micro, Small and Medium Enterprises (MSME) or the firms registered with the Central Purchase Organization or the concerned Ministr"
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 6,
+            "clause": "2",
+            "text": "No interest is payable on the Earnest Money Deposit (EMD)."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 6,
+            "clause": "2",
+            "text": "The Bidder (s) should remit an Earnest Money Deposit (EMD) of Rs. 20,000/- (Rupees Twenty Thousand only) at the bank account mentioned in Page 1."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 9,
+            "clause": "1",
+            "text": "EMD Payment Receipt / MSME Certificate for Exemption of EMD."
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 15,
+            "clause": "6",
+            "text": "PAN No. of the Agency GST No. of the Agency 7 Has your firm/company ever changed its name any time? If yes, provide the previous name and the reasons there for?"
+          }
+        ]
+      },
+      {
+        "tender_id": "iitpkd-ambulance-2024",
+        "case_id": "5c6cf8b83cb24ca8a34eff93d7cad861",
+        "status": "succeeded",
+        "go_no_go": "CONDITIONAL",
+        "summary": "CONDITIONAL. 3 supported, 0 contradicted, 5 missing and 11 unclear out of 19 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 19,
+        "decisions": {
+          "met": 3,
+          "not_met": 0,
+          "missing": 5,
+          "unclear": 11
+        },
+        "risks": 7,
+        "deadlines": 1,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding IIT Palakkad tender TENDER/2023-24/399 for an ambulance\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 1, page 7 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"The bidder should be a Class-I / Class-II Local Supplier meeting the requirement of minimum 20% Local Content in line with the Public Procurement (Preference to Make in India) Order 2017 No. P-45021/2/2017-PP(BE-II) dated 16-09-2020.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n2. Clause 2, page 1 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"Bidders other than Class-I / Class-II Local Suppliers, who may participate in this tender, may be doing so at their own risk.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n3. Clause 2, page 1 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"The bidder should be a Class-I / Class-II Local Supplier meeting the requirement as per the Order No.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n4. Clause 2, page 13 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"I/We  ______________________  [name of the manufacturer] hereby confirm in respect of quoted items(s) that Local Content is more than 20% but less than 50% and come under \u201cClass-II Local Supplier\u201d category.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n5. Clause 2, page 13 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"Tick ( ) and Fill the Appropriate Category I/We ______________________ [name of the manufacturer] hereby confirm in respect of quoted items(s) that Local Content is equal to or more than 50% and come under \u201cClass-I Local Supplier\u201d category.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 2, page 2 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"(c) Each bidder shall submit only one bid, either by himself or as a partner in a joint venture or as a member of the consortium.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n7. Clause 2, page 1 (iitpkd-ambulance-2024.pdf).\n   Tender text: \"Events Date and Time 1 Publication of the Tender Document 22-02-2024 3 Last Date/Time for submission of ONLINE Bids 09-03-2024, 15:00 hours 4 Opening of Technical Bids 09-03-2024, 15:15 hours Note:\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 45 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 32,
+            "detail": "19 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 15,
+            "detail": "19 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 5,
+            "detail": "7 risks, 1 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "7 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 0,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 0.119,
+        "latency_ms_recorded": 103,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 38,
+          "claims": 38
+        },
+        "matrix_preview": [
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 3,
+            "clause": "3",
+            "text": "NSIC / MSME registered bidders must submit a copy of a valid NSIC / MSME Registration Certificate for exemption of EMD."
+          },
+          {
+            "decision": "unclear",
+            "kind": "eligibility",
+            "page": 7,
+            "clause": "1",
+            "text": "The bidder should be a Class-I / Class-II Local Supplier meeting the requirement of minimum 20% Local Content in line with the Public Procurement (Preference to Make in India) Order 2017 No. P-45021/2/2017-PP(BE-II) dated 16-09-2020."
+          },
+          {
+            "decision": "unclear",
+            "kind": "eligibility",
+            "page": 1,
+            "clause": "2",
+            "text": "Bidders other than Class-I / Class-II Local Suppliers, who may participate in this tender, may be doing so at their own risk."
+          },
+          {
+            "decision": "unclear",
+            "kind": "eligibility",
+            "page": 1,
+            "clause": "2",
+            "text": "The bidder should be a Class-I / Class-II Local Supplier meeting the requirement as per the Order No."
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 3,
+            "clause": "5",
+            "text": "(f) Information related to the agency/bidder such as photocopies of the Registration/PAN/GST/TIN shall be furnished."
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 12,
+            "clause": "2",
+            "text": "Indian Institute of Technology Palakkad Ahalia Integrated Campus, Kozhipara, Palakkad, Kerala 678623 We hereby confirm and declare that we, M/s _________________ are not blacklisted/ De-registered / debarred by any Government department/ Pu"
+          },
+          {
+            "decision": "unclear",
+            "kind": "eligibility",
+            "page": 13,
+            "clause": "2",
+            "text": "I/We ______________________ [name of the manufacturer] hereby confirm in respect of quoted items(s) that Local Content is more than 20% but less than 50% and come under \u201cClass-II Local Supplier\u201d category."
+          },
+          {
+            "decision": "unclear",
+            "kind": "eligibility",
+            "page": 13,
+            "clause": "2",
+            "text": "Tick ( ) and Fill the Appropriate Category I/We ______________________ [name of the manufacturer] hereby confirm in respect of quoted items(s) that Local Content is equal to or more than 50% and come under \u201cClass-I Local Supplier\u201d category."
+          }
+        ]
+      },
+      {
+        "tender_id": "sggscc-civil-2024",
+        "case_id": "d8737fbadec04f6e8cfdc9b6881859a2",
+        "status": "succeeded",
+        "go_no_go": "NO-GO",
+        "summary": "NO-GO. 8 supported, 4 contradicted, 11 missing and 10 unclear out of 33 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 33,
+        "decisions": {
+          "met": 8,
+          "not_met": 4,
+          "missing": 11,
+          "unclear": 10
+        },
+        "risks": 12,
+        "deadlines": 4,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding Sri Guru Gobind Singh College of Commerce e-tender for civil and interior works, 2024\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 1, page 4 (sggscc-civil-2024.pdf).\n   Tender text: \": BIDDER SHOULD HAVE COMPLETED THREE SIMILAR WORKS EACH COSTING NOT LESS THAN RUPEES  70 LAKHS OR\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n2. Clause 1, page 4 (sggscc-civil-2024.pdf).\n   Tender text: \"BIDDER SHOULD HAVE COMPLETED ONE SIMILAR WORKS EACH COSTING NOT LESS THAN RUPEES 141 LAKH 2)\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n3. Clause 1, page 4 (sggscc-civil-2024.pdf).\n   Tender text: \"BIDDER SHOULD HAVE COMPLETED TWO SIMILAR WORKS EACH COSTING NOT LESS THAN RUPEES 106 LAKHS OR\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n4. Clause 1, page 4 (sggscc-civil-2024.pdf).\n   Tender text: \": BIDDER SHOULD HAVE A SOLVENCY OF RUPEES 70 LAKHS 4)\"\n   Query: Please confirm whether an MSME or startup relaxation applies to this threshold, and which document should demonstrate it.\n\n5. Clause 8, page 27 (sggscc-civil-2024.pdf).\n   Tender text: \"This is to certify that the total turnover of M/s Having PAN is as under:\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 2, page 2 (sggscc-civil-2024.pdf).\n   Tender text: \"2 ELIGIBILITY CRITERIA.........................................................................................................\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n7. Clause 26, page 3 (sggscc-civil-2024.pdf).\n   Tender text: \"26-05-2024 Last Date of Submission of Tender.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\n8. Clause 27, page 3 (sggscc-civil-2024.pdf).\n   Tender text: \"27-05-2024 At 3:00 Pm Date Of Opening of Technical Bid.\"\n   Query: Please confirm that this date is unchanged by any corrigendum, and confirm the timezone.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 146 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 37,
+            "detail": "33 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 26,
+            "detail": "33 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 5,
+            "detail": "12 risks, 4 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "8 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 0,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 6.529,
+        "latency_ms_recorded": 6504,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 72,
+          "claims": 72
+        },
+        "matrix_preview": [
+          {
+            "decision": "met",
+            "kind": "financial",
+            "page": 5,
+            "clause": "1",
+            "text": "1) : COMPANY REGISTRATION DETAILS \u2610 2) : COMPANY PROFILE \u2610 3) : GST REGISTRATION CERTIFICATE COPY \u2610 4) : PAN CARD COPY \u2610 5) : TURNOVER CERTIFICATE (ANNEXURE -1) \u2610 6) : SOLVENCY CERTIFICATE \u2610 7) : VALID COMPLETION CERTIFICATES \u2610 8) : TENDER "
+          },
+          {
+            "decision": "not_met",
+            "kind": "technical",
+            "page": 4,
+            "clause": "1",
+            "text": ": BIDDER SHOULD HAVE COMPLETED THREE SIMILAR WORKS EACH COSTING NOT LESS THAN RUPEES 70 LAKHS OR"
+          },
+          {
+            "decision": "not_met",
+            "kind": "technical",
+            "page": 4,
+            "clause": "1",
+            "text": "BIDDER SHOULD HAVE COMPLETED ONE SIMILAR WORKS EACH COSTING NOT LESS THAN RUPEES 141 LAKH 2)"
+          },
+          {
+            "decision": "not_met",
+            "kind": "technical",
+            "page": 4,
+            "clause": "1",
+            "text": "BIDDER SHOULD HAVE COMPLETED TWO SIMILAR WORKS EACH COSTING NOT LESS THAN RUPEES 106 LAKHS OR"
+          },
+          {
+            "decision": "unclear",
+            "kind": "financial",
+            "page": 27,
+            "clause": "8",
+            "text": "This is to certify that the total turnover of M/s Having PAN is as under:"
+          },
+          {
+            "decision": "unclear",
+            "kind": "eligibility",
+            "page": 2,
+            "clause": "2",
+            "text": "2 ELIGIBILITY CRITERIA........................................................................................................."
+          },
+          {
+            "decision": "unclear",
+            "kind": "financial",
+            "page": 2,
+            "clause": "24",
+            "text": "24 TURNOVER CERTIFICATE (ANNEXURE 1)....................................................................."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 3,
+            "clause": "15",
+            "text": "EMD of unsuccessful bidders will be returned."
+          }
+        ]
+      },
+      {
+        "tender_id": "nhm-dnh-2025",
+        "case_id": "3d4647806c134d48a7807bdffc2fc311",
+        "status": "succeeded",
+        "go_no_go": "NO-GO",
+        "summary": "NO-GO. 14 supported, 0 contradicted, 36 missing and 20 unclear out of 70 extracted requirements. Draft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.",
+        "requirements": 70,
+        "decisions": {
+          "met": 14,
+          "not_met": 0,
+          "missing": 36,
+          "unclear": 20
+        },
+        "risks": 24,
+        "deadlines": 0,
+        "letter": "To\nThe Tender Inviting Authority\n\nSubject: Pre-bid queries regarding National Health Mission Dadra and Nagar Haveli and Daman and Diu tender notice (s3waas upload, November 2025)\n\nSir or Madam,\n\nWe intend to participate in the subject tender. Please clarify the points below. Each point quotes the tender text it refers to.\n\n1. Clause 6, page 5 (nhm-dnh-2025.pdf).\n   Tender text: \"Bidders claiming MSME benefits must provide valid UDYAM Registration Certificate as per MSME Notification 2021.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n2. Clause 2, page 6 (nhm-dnh-2025.pdf).\n   Tender text: \"Start-ups (whether MSEs or otherwise) are also exempted from EMD, prior experience, and prior turnover requirements, subject to meeting quality and technical specifications as per O.M issued by the Ministry/UT Administration time to time.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n3. Clause \u2014, page 1 (nhm-dnh-2025.pdf).\n   Tender text: \"Undertaking and Verification of the Required Documents/Certificates/Permission as per Annexure \u2013 B.\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n4. Clause 4, page 4 (nhm-dnh-2025.pdf).\n   Tender text: \"The bidder must ensure all uploaded documents are digitally signed using a valid Class-III Digital Signature Certificate (DSC).\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n5. Clause 8, page 7 (nhm-dnh-2025.pdf).\n   Tender text: \"Statement of Annual Income / Turnover: - The average annual turnover of the bidder for the last 3 financial year must be at least 50% of the Tender Value, the bidder shall\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\n6. Clause 8, page 8 (nhm-dnh-2025.pdf).\n   Tender text: \"8 provide proof of annual income/turnover for the last three financial years,  (2022-23, 2023-24 and 2024-25).\"\n   Query: Please confirm the exact threshold, the financial years to be counted, and the document that will be accepted.\n\nDraft for a human to review. This is not legal advice and it is not a bid recommendation from the tendering authority.\n\nYours faithfully,\n[Authorised signatory]\n[Company name]",
+        "verification": {
+          "passed": true,
+          "failures": [],
+          "stripped": [],
+          "exhausted": false
+        },
+        "trace": [
+          {
+            "node": "planner",
+            "ms": 0,
+            "detail": "15 queries, 19 sections"
+          },
+          {
+            "node": "extractor",
+            "ms": 46,
+            "detail": "70 requirements via heuristic (v1)"
+          },
+          {
+            "node": "eligibility",
+            "ms": 47,
+            "detail": "70 rows via rules"
+          },
+          {
+            "node": "risk",
+            "ms": 5,
+            "detail": "24 risks, 0 deadlines via heuristic"
+          },
+          {
+            "node": "drafter",
+            "ms": 0,
+            "detail": "6 cited queries via template"
+          },
+          {
+            "node": "verifier",
+            "ms": 0,
+            "detail": "passed"
+          }
+        ],
+        "latency_seconds": 0.194,
+        "latency_ms_recorded": 171,
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "faithfulness": {
+          "supported": 120,
+          "claims": 120
+        },
+        "matrix_preview": [
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 7,
+            "clause": "8",
+            "text": "PAN Card: - A self-attested copy of the Permanent Account Number (PAN) card issued by the Income Tax Department of India must be submitted."
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 21,
+            "clause": "1",
+            "text": "1 PAN Card 2 GST Registration Certificate."
+          },
+          {
+            "decision": "unclear",
+            "kind": "document",
+            "page": 5,
+            "clause": "6",
+            "text": "Bidders claiming MSME benefits must provide valid UDYAM Registration Certificate as per MSME Notification 2021."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 5,
+            "clause": "6",
+            "text": "EMD is to be obtained from the bidders except MSME and Startups as per Rule 170 of General Financial Rules (GFR), Rules, 2017."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 5,
+            "clause": "6",
+            "text": "Earnest Money Deposit (EMD) \u2013\u20b9 4,610/- a."
+          },
+          {
+            "decision": "missing",
+            "kind": "financial",
+            "page": 6,
+            "clause": "6",
+            "text": "Micro and Small Enterprises (MSEs) registered under the MSME Procurement Policy are exempt from EMD submission."
+          },
+          {
+            "decision": "unclear",
+            "kind": "financial",
+            "page": 6,
+            "clause": "2",
+            "text": "Start-ups (whether MSEs or otherwise) are also exempted from EMD, prior experience, and prior turnover requirements, subject to meeting quality and technical specifications as per O.M issued by the Ministry/UT Administration time to time."
+          },
+          {
+            "decision": "met",
+            "kind": "document",
+            "page": 8,
+            "clause": "5",
+            "text": "Certification that the Bidder or any of its allied is not Blacklisted by any Central/State Government/ Public Undertaking/Institute over the last three years as per prescribed format in Annexure-C."
+          }
+        ]
+      }
+    ],
+    "faithfulness": {
+      "supported": 964,
+      "claims": 964,
+      "rate": 1.0
+    },
+    "latency_seconds": {
+      "per_tender": [
+        {
+          "id": "barc-ced-2026",
+          "seconds": 0.2
+        },
+        {
+          "id": "cci-forensic-2024",
+          "seconds": 0.17
+        },
+        {
+          "id": "epi-1366",
+          "seconds": 0.283
+        },
+        {
+          "id": "epi-1367",
+          "seconds": 0.272
+        },
+        {
+          "id": "igidr-travel-2024",
+          "seconds": 0.124
+        },
+        {
+          "id": "iiml-website",
+          "seconds": 0.18
+        },
+        {
+          "id": "iimtrichy-stp-2024",
+          "seconds": 0.256
+        },
+        {
+          "id": "iitpkd-ambulance-2024",
+          "seconds": 0.119
+        },
+        {
+          "id": "sggscc-civil-2024",
+          "seconds": 6.529
+        },
+        {
+          "id": "nhm-dnh-2025",
+          "seconds": 0.194
+        }
+      ],
+      "total": 8.327
+    }
+  }
+}
