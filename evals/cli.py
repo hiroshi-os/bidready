@@ -15,10 +15,12 @@ from evals.harness import (
     environment,
     evaluate,
     fetch,
+    llm_eligibility,
     load_manifest,
     missing_pdfs,
     probe_llm,
     run_cases,
+    score_nli,
 )
 
 
@@ -34,6 +36,13 @@ def main() -> None:
     all_cmd.add_argument("--reranker-model", default="cross-encoder/ms-marco-MiniLM-L-6-v2")
     all_cmd.add_argument("--out", default="evals/results/measured.json")
     all_cmd.add_argument("--skip-cases", action="store_true")
+    local_cmd = sub.add_parser("local", help="score retrieval and the pipeline with a local model")
+    local_cmd.add_argument("--llm-model", default="qwen2.5:3b")
+    local_cmd.add_argument("--prompts", default="v1,v2")
+    local_cmd.add_argument("--embedding-model", default="sentence-transformers/all-MiniLM-L6-v2")
+    local_cmd.add_argument("--reranker-model", default="cross-encoder/ms-marco-MiniLM-L-6-v2")
+    local_cmd.add_argument("--out", default="evals/results/local.json")
+    local_cmd.add_argument("--tenders", default="", help="comma-separated tender ids; empty means all")
     args = parser.parse_args()
 
     if args.command == "fetch":
@@ -68,6 +77,119 @@ def main() -> None:
         out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
         print(out)
         _print_summary(payload)
+        return
+    if args.command == "local":
+        _local(args)
+
+
+def _local(args) -> None:
+    from dataclasses import replace
+
+    from bidready.config import Settings
+    from bidready.llm import build_llm
+    from bidready.rag import build_embedder, build_reranker
+
+    settings = Settings.from_env()
+    prompts = [item.strip() for item in args.prompts.split(",") if item.strip()]
+    settings = replace(
+        settings,
+        llm_provider="ollama",
+        llm_model=args.llm_model,
+        embedding_provider="sentence-transformers",
+        embedding_model=args.embedding_model,
+        reranker="cross-encoder",
+        reranker_model=args.reranker_model,
+        heuristic_fallback=False,
+        prompt_version=prompts[0],
+    )
+    tender_ids = [item.strip() for item in args.tenders.split(",") if item.strip()] or None
+    print("retrieval with", args.embedding_model, "and", args.reranker_model, flush=True)
+    scored = evaluate(
+        embedding_provider="sentence-transformers",
+        embedding_model=args.embedding_model,
+        reranker_name="cross-encoder",
+        reranker_model=args.reranker_model,
+    )
+    if tender_ids:
+        wanted = set(tender_ids)
+        scored["tenders"] = [row for row in scored["tenders"] if row["id"] in wanted]
+    by_prompt = {}
+    eligibility = None
+    hybrid = None
+
+    def dump(partial: bool) -> None:
+        payload = {
+            "environment": environment(),
+            "partial": partial,
+            "llm_provider": "ollama",
+            "llm_model": args.llm_model,
+            "embedding_model": args.embedding_model,
+            "reranker_model": args.reranker_model,
+            "tender_ids": tender_ids,
+            "note": (
+                "llm_eligibility is the local model choosing a span id, with no rule proposal. "
+                "hybrid_eligibility shows the rule checker's proposal and asks the model to agree or override. "
+                "semantic_faithfulness.headline_rate excludes pairs whose two sides are the same string. "
+                "heuristic_* is the cue extractor and the rule checker, not the earlier mock-baseline file."
+            ),
+            "retrieval": scored["retrieval"],
+            "tenders": scored["tenders"],
+            "heuristic_extraction": scored["prompt_policy"],
+            "heuristic_eligibility": {
+                key: scored["eligibility"][key] for key in ("n", "correct", "accuracy", "confusion")
+            },
+            "prompts": by_prompt,
+            "llm_eligibility": _eligibility_payload(eligibility),
+            "hybrid_eligibility": _eligibility_payload(hybrid),
+        }
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    out = Path(args.out)
+    dump(True)
+    for prompt in prompts:
+        print(f"pipeline prompt {prompt}", flush=True)
+        prompt_settings = replace(settings, prompt_version=prompt)
+        by_prompt[prompt] = run_cases(prompt_settings, tender_ids)
+        by_prompt[prompt]["semantic_faithfulness"] = score_nli(by_prompt[prompt])
+        dump(True)
+        extraction = by_prompt[prompt].get("extraction") or {}
+        print(
+            f"prompt {prompt} done matched={extraction.get('matched')}/{extraction.get('gold')}",
+            flush=True,
+        )
+    print("gold eligibility with the llm", flush=True)
+    embedder = build_embedder("sentence-transformers", args.embedding_model)
+    reranker = build_reranker("cross-encoder", args.reranker_model)
+    llm = build_llm(settings)
+    eligibility = llm_eligibility(llm, embedder, reranker, tender_ids, show_rule=False)
+    dump(True)
+    print("gold eligibility hybrid adjudication", flush=True)
+    hybrid = llm_eligibility(llm, embedder, reranker, tender_ids, show_rule=True)
+    dump(False)
+    print(out)
+    for prompt, cases in by_prompt.items():
+        extraction = cases.get("extraction") or {}
+        faith = cases.get("faithfulness") or {}
+        semantic = cases.get("semantic_faithfulness") or {}
+        print(
+            f"prompt {prompt}: extraction matched={extraction.get('matched')}/{extraction.get('gold')} "
+            f"precision={extraction.get('precision')} recall={extraction.get('recall')} "
+            f"span {faith.get('supported')}/{faith.get('claims')} "
+            f"nli headline {semantic.get('nonidentical_entailment')}/{semantic.get('nonidentical_n')}"
+        )
+    print(
+        f"llm eligibility {eligibility.get('correct')}/{eligibility.get('n')} "
+        f"cited {eligibility.get('cited')}"
+    )
+    print(f"hybrid eligibility {hybrid.get('correct')}/{hybrid.get('n')} cited {hybrid.get('cited')}")
+
+
+def _eligibility_payload(summary: dict | None) -> dict | None:
+    if summary is None:
+        return None
+    keys = ("n", "correct", "accuracy", "confusion", "judge", "cited", "rows")
+    return {key: summary[key] for key in keys if key in summary}
 
 
 def _check() -> None:

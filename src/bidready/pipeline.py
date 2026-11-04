@@ -145,6 +145,7 @@ def _run(
         company_index=company_index,
         prompt_version=settings.prompt_version,
         title=case.title,
+        allow_heuristic_fallback=settings.heuristic_fallback,
     )
     graph = build_graph(ctx)
     final = graph.invoke(initial_state(), {"recursion_limit": 50})

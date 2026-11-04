@@ -37,6 +37,7 @@ class Settings:
     s3_access_key: str
     s3_secret_key: str
     s3_region: str
+    heuristic_fallback: bool = True
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -67,6 +68,7 @@ class Settings:
             s3_access_key=_env("S3_ACCESS_KEY"),
             s3_secret_key=_env("S3_SECRET_KEY"),
             s3_region=_env("S3_REGION", "us-east-1"),
+            heuristic_fallback=_env("HEURISTIC_FALLBACK", "1").lower() not in {"0", "false", "no"},
         )
 
 
